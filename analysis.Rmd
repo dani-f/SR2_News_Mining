@@ -9,7 +9,7 @@ editor_options:
 <!-- analysis.md is generated from analysis.Rmd -->
 
 # Forschungsfrage
-Welche Nachrichten kommen in den stündlichen Funk SR2 Nachrichtenblöcken vor? 
+Welche Nachrichten kommen in den täglichen Funk SR2 Nachrichtenblöcken vor? 
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
 # Load pckgs
