@@ -28,7 +28,7 @@ stop_words_german <-
 
 # Analysis
 ## Keyword frecuency
-Bilanz %>%
+news %>%
   unnest_tokens(output = "Wort", input = Themen) %>% 
   anti_join(stop_words_german, by = "Wort") %>% 
   count(Datum, Wort, name = "Anzahl", sort = TRUE) %>% 

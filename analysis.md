@@ -4,7 +4,7 @@ SR2 News Mining
 <!-- analysis.md is generated from analysis.Rmd -->
 # Forschungsfrage
 
-Welche Nachrichten kommen in den stündlichen Funk SR2 Nachrichtenblöcken vor?
+Welche Nachrichten kommen in den täglichen Funk SR2 Nachrichtenblöcken vor?
 
 ``` r
 # Load dictionary
@@ -13,7 +13,7 @@ stop_words_german <-
 
 # Analysis
 ## Keyword frecuency
-Bilanz %>%
+news %>%
   unnest_tokens(output = "Wort", input = Themen) %>% 
   anti_join(stop_words_german, by = "Wort") %>% 
   count(Datum, Wort, name = "Anzahl", sort = TRUE) %>% 
