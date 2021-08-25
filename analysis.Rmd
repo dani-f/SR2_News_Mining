@@ -18,7 +18,7 @@ library(dplyr)
 library(tidytext)
 
 # Load data
-load(file = paste0("../data/", "news_", Sys.Date(), ".Rdata"))
+load(file = paste0("data/", "news_", Sys.Date(), ".Rdata"))
 ```
 
 ```{r}

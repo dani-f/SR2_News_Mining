@@ -1,7 +1,7 @@
 SR2 News Mining
 ================
 
-<!-- analysis.md is generated from analysis.Rmd. -->
+<!-- analysis.md is generated from analysis.Rmd -->
 # Forschungsfrage
 
 Welche Nachrichten kommen in den stündlichen Funk SR2 Nachrichtenblöcken vor?
