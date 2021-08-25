@@ -1,20 +1,17 @@
 ---
 title: "SR2 News Mining"
 output:
-  html_document:
-    keep_md: true
-    df_print: paged
-    theme: cosmo
-    highlight: monochrome
-    code_folding: hide
+  rmarkdown::github_document
 editor_options: 
   chunk_output_type: console
 ---
 
+<!-- analysis.md is generated from analysis.Rmd. -->
+
 # Forschungsfrage
 Welche Nachrichten kommen in den stündlichen Funk SR2 Nachrichtenblöcken vor? 
 
-```{r echo=TRUE, message=FALSE, warning=FALSE}
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 # Load pckgs
 library(knitr)
 library(dplyr)
@@ -22,7 +19,9 @@ library(tidytext)
 
 # Load data
 load(file = paste0("../data/", "Bilanz_", Sys.Date(), ".Rdata"))
+```
 
+```{r}
 # Load dictionary
 stop_words_german <-
   data.frame("Wort" = stopwords::stopwords("de", source = "snowball"))
@@ -32,7 +31,8 @@ stop_words_german <-
 Bilanz %>%
   unnest_tokens(output = "Wort", input = Themen) %>% 
   anti_join(stop_words_german, by = "Wort") %>% 
-  count(Datum, Wort, sort = TRUE)
+  count(Datum, Wort, name = "Anzahl", sort = TRUE) %>% 
+  head(30)
 
 ```
 
