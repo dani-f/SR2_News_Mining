@@ -109,11 +109,11 @@ Bilanz_am_Abend <- data.frame(Themen = Themen_Abend,
                                stringsAsFactors = FALSE)
 
 # Final data frame
-Bilanz <- bind_rows("Mittag" = Bilanz_am_Mittag,
+news <- bind_rows("Mittag" = Bilanz_am_Mittag,
                     "Abend" = Bilanz_am_Abend,
                     .id = "Format")
-save(Bilanz,
+save(news,
      file = paste0("data/", "news_", Sys.Date(), ".Rdata"))
-write.csv2(Bilanz,
+write.csv2(news,
            file = paste0("data/", "news_", Sys.Date(), ".csv"))
 
