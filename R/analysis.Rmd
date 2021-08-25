@@ -1,0 +1,38 @@
+---
+title: "SR2 News Mining"
+output:
+  html_document:
+    df_print: paged
+    theme: cosmo
+    highlight: monochrome
+    code_folding: hide
+editor_options: 
+  chunk_output_type: console
+---
+
+# Forschungsfrage
+Welche Nachrichten kommen in den stündlichen Funk SR2 Nachrichtenblöcken vor? 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# Load pckgs
+library(knitr)
+library(dplyr)
+library(tidytext)
+
+# Load data
+load(file = paste0("../data/", "Bilanz_", Sys.Date(), ".Rdata"))
+
+# Load dictionary
+stop_words_german <-
+  data.frame("Wort" = stopwords::stopwords("de", source = "snowball"))
+
+# Analysis
+## Keyword frecuency
+Bilanz %>%
+  unnest_tokens(output = "Wort", input = Themen) %>% 
+  anti_join(stop_words_german, by = "Wort") %>% 
+  count(Datum, Wort, sort = TRUE)
+
+```
+
+
