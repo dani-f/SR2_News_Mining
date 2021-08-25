@@ -2,6 +2,7 @@
 title: "SR2 News Mining"
 output:
   html_document:
+    keep_md: true
     df_print: paged
     theme: cosmo
     highlight: monochrome
