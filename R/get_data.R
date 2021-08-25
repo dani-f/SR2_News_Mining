@@ -22,15 +22,18 @@ html_Bilanz_am_Abend <- read_html(GET(URL_Bilanz_am_Abend,
 # Themen
 Themen_Mittag <- html_Bilanz_am_Mittag %>%
   html_nodes("div#picturearticle_collection_box p.teaser__text__paragraph") %>% 
-  html_text()
+  html_text() %>%
+  str_remove("^.+(Themen: |Themen:|Themen :|Themen;)|Rep: ") #wtf SR
 
 Themen_Abend <- html_Bilanz_am_Abend %>%
   html_nodes("div#picturearticle_collection_box p.teaser__text__paragraph") %>% 
-  html_text()
+  html_text() %>%
+  str_remove("^.+(Themen: |Themen:|Themen :|Themen;)|Rep: ")
 
 # Links
 Links_Mittag <- html_Bilanz_am_Mittag %>%
-  html_nodes("h3 a") %>% html_attr("href")
+  html_nodes("h3 a") %>%
+  html_attr("href")
 Links_Mittag <- paste0("https://dev2.sr-mediathek.sr-multimedia.de/", Links_Mittag)
 
 Links_Abend <- html_Bilanz_am_Abend %>%
