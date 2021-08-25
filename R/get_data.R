@@ -113,7 +113,7 @@ Bilanz <- bind_rows("Mittag" = Bilanz_am_Mittag,
                     "Abend" = Bilanz_am_Abend,
                     .id = "Format")
 save(Bilanz,
-     file = paste0("data/", "Bilanz_", Sys.Date(), ".Rdata"))
+     file = paste0("data/", "news_", Sys.Date(), ".Rdata"))
 write.csv2(Bilanz,
-           file = paste0("data/", "Bilanz_", Sys.Date(), ".csv"))
+           file = paste0("data/", "news_", Sys.Date(), ".csv"))
 
