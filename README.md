@@ -10,7 +10,7 @@ The data should be gathered from officially accessible documents, in order not t
 Data are first scraped with R/get_data.R, then saved as a .csv or .Rdata file. Data exploration and visualizations are created within analysis.md (generated from within RStudio by analysis.Rmd).
 
 ## Software
-- R version 3.6.2
+- R (version 3.6.2)
 - RStudio (version 1.1.423)
 - Running under Windows >= 8 (x64)
 - Packages: stopwords_2.1, tidytext_0.3.1, knitr_1.30, tibble_3.1.1, stringr_1.4.0, dplyr_1.0.6, httr_1.4.2, rvest_1.0.1
