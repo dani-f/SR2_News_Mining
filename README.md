@@ -13,6 +13,7 @@ Data are first scraped with R/get_data.R, then saved as a .csv or .Rdata file. D
 - R (version 3.6.2)
 - RStudio (version 1.1.423)
 - Running under Windows >= 8 (x64)
-- Packages: stopwords_2.1, tidytext_0.3.1, knitr_1.30, tibble_3.1.1, stringr_1.4.0, dplyr_1.0.6, httr_1.4.2, rvest_1.0.1
+- Packages: stopwords_2.1, tidytext_0.3.1, knitr_1.30, tibble_3.1.1, stringr_1.4.0, dplyr_1.0.6, httr_1.4.2,
+rvest_1.0.1, lubridate_1.7.10
 
 No need to say that most web scraping projects of these times have been inspired by David Kriesel's amazing Spiegel Mining project (www.dkriesel.com/spiegelmining).
