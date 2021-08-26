@@ -44,13 +44,13 @@ Laenge_Datum_Mittag <- html_Bilanz_am_Mittag %>%
   html_text() %>% 
   str_extract_all("Länge.{10}|Datum.{12}")
 ### Clean Länge und Datum
-Laenge_Datum_Mittag <- 
+Laenge_Datum_Mittag <-
   matrix(unlist(Laenge_Datum_Mittag),
          nrow = length(Laenge_Datum_Mittag),
          byrow = TRUE) %>%
   as_tibble() %>% 
   mutate(Laenge = str_trim(str_sub(V1, start = -8)),
-         Laenge = hms(str_split(test$Laenge, ":")),
+         Laenge = hms(str_split(Laenge, ":")),
          Datum = str_trim(str_sub(V2, start = -11)),
          Datum = as.Date(Datum, format = "%d.%m.%Y")) %>% 
   select(Laenge, Datum)
@@ -66,7 +66,9 @@ Laenge_Datum_Abend <-
          byrow = TRUE) %>%
   as_tibble() %>% 
   mutate(Laenge = str_trim(str_sub(V1, start = -8)),
-         Datum = str_trim(str_sub(V2, start = -11))) %>% 
+         Laenge = hms(str_split(Laenge, ":")),
+         Datum = str_trim(str_sub(V2, start = -11)),
+         Datum = as.Date(Datum, format = "%d.%m.%Y")) %>% 
   select(Laenge, Datum)
 
 ## Autor
