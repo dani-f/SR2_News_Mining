@@ -4,6 +4,7 @@ library(httr)
 library(dplyr)
 library(stringr)
 library(tibble)
+library(lubridate)
 
 # Pass URLs
 URL_Bilanz_am_Mittag <- "https://dev2.sr-mediathek.sr-multimedia.de/index.php?seite=8&sen=SR2_BAM_P&tbl=pf"
@@ -11,9 +12,9 @@ URL_Bilanz_am_Abend <- "https://dev2.sr-mediathek.sr-multimedia.de/index.php?sei
 
 # Scrape html
 html_Bilanz_am_Mittag <- read_html(GET(URL_Bilanz_am_Mittag,
-                                  config(ssl_verifypeer = 0L, ssl_verifyhost = 0L)))
+                                       config(ssl_verifypeer = 0L, ssl_verifyhost = 0L)))
 html_Bilanz_am_Abend <- read_html(GET(URL_Bilanz_am_Abend,
-                                  config(ssl_verifypeer = 0L, ssl_verifyhost = 0L)))
+                                      config(ssl_verifypeer = 0L, ssl_verifyhost = 0L)))
 
 # Extract data
 ## Themen
@@ -43,13 +44,15 @@ Laenge_Datum_Mittag <- html_Bilanz_am_Mittag %>%
   html_text() %>% 
   str_extract_all("Länge.{10}|Datum.{12}")
 ### Clean Länge und Datum
-Laenge_Datum_Mittag <-
+Laenge_Datum_Mittag <- 
   matrix(unlist(Laenge_Datum_Mittag),
          nrow = length(Laenge_Datum_Mittag),
          byrow = TRUE) %>%
   as_tibble() %>% 
   mutate(Laenge = str_trim(str_sub(V1, start = -8)),
-         Datum = str_trim(str_sub(V2, start = -11))) %>% 
+         Laenge = hms(str_split(test$Laenge, ":")),
+         Datum = str_trim(str_sub(V2, start = -11)),
+         Datum = as.Date(Datum, format = "%d.%m.%Y")) %>% 
   select(Laenge, Datum)
 
 Laenge_Datum_Abend <- html_Bilanz_am_Abend %>%
