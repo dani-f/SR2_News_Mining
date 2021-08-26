@@ -8,32 +8,43 @@ editor_options:
 
 <!-- analysis.md is generated from analysis.Rmd -->
 
-# Forschungsfrage
-Welche Nachrichten kommen in den täglichen Funk SR2 Nachrichtenblöcken vor? 
+# Introduction
+Topics are set and public opinion is framed by broadcasting stations. This project wants to analyze the daily news broadcasted by German radio station SR2.
 
-```{r echo = FALSE, message = FALSE, warning = FALSE}
+```{r load pckgs and data, echo = FALSE, message = FALSE, warning = FALSE}
 # Load pckgs
 library(knitr)
 library(dplyr)
 library(tidytext)
 
 # Load data
-load(file = paste0("data/", "news_", Sys.Date(), ".Rdata"))
+date_of_data_to_load <- "2021-08-25"
+load(file = paste0("data/", "news_", date_of_data_to_load, ".Rdata"))
 ```
 
-```{r}
+# Analysis
+## Part 1
+Which news appear within the daily news blocks? 
+
+### Keywords by number of appearence
+Let's have a look on the keywords. First, we load a dictionary with german stop-words in order to delete unnecessary words of the news messages.
+```{r load dictionary}
 # Load dictionary
 stop_words_german <-
   data.frame("Wort" = stopwords::stopwords("de", source = "snowball"))
-
+```
+Now, let's print the top 30 keywords by number of appearance.
+```{r analysis}
 # Analysis
 ## Keyword frecuency
 news %>%
   unnest_tokens(output = "Wort", input = Themen) %>% 
   anti_join(stop_words_german, by = "Wort") %>% 
-  count(Datum, Wort, name = "Anzahl", sort = TRUE) %>% 
+  count(Wort, name = "Anzahl", sort = TRUE) %>% 
   head(30)
 
 ```
+We see, Corona clearly dominated the news and also EU related topics were discussed. Since SR2 is a regional broadcasting station, we also observe the keyword Saarland. At the end of the top ten we see Afghanistan, which might have entered the daily news just recently. Let's confirm this statement with our data and print keywords over time.
 
-
+### Keywords over time
+_work in progress_
