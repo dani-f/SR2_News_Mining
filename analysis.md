@@ -14,7 +14,7 @@ Which news appear within the daily news blocks?
 
 ### Keywords by number of appearence
 
-Let's have a look on the keywords. First, we load a dictionary with german stop-words in order to delete unnecessary words of the news messages.
+Let's have a look on the keywords. First, we load a dictionary with german stop-words in order to be able to delete unnecessary words of the news messages.
 
 ``` r
 # Load dictionary
@@ -66,7 +66,27 @@ news %>%
     ## 29      berlin     23
     ## 30  frankreich     23
 
-We see, Corona clearly dominated the news and also EU related topics were discussed. Since SR2 is a regional broadcasting station, we also observe the keyword Saarland. At the end of the top ten we see Afghanistan, which might have entered the daily news just recently. Let's confirm this statement with our data and print keywords over time.
+We see, Corona clearly dominated the news and also EU related topics were discussed. Since SR2 is a regional broadcasting station, we also observe the keyword Saarland. If we sum up all US related keywords (Biden, Trump, USA, US) we notice it seems to be another dominant topic yet before topics regarding the EU.
+
+``` r
+# Analysis
+## Keyword frecuency US related
+news %>%
+  unnest_tokens(output = "Wort", input = Themen) %>% 
+  anti_join(stop_words_german, by = "Wort") %>% 
+  mutate(Wort = ifelse(Wort %in% c("biden", "trump", 
+                                   "usa", "us"),
+                "US_keyword", Wort)) %>% 
+  count(Wort, name = "Anzahl", sort = TRUE) %>% 
+  head(3)
+```
+
+    ##         Wort Anzahl
+    ## 1     corona    258
+    ## 2 US_keyword    120
+    ## 3         eu    110
+
+At the end of the top ten we see Afghanistan, which might have entered the daily news just recently. Let's confirm this statement with our data and print keywords over time.
 
 ### Keywords over time
 
