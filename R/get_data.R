@@ -21,7 +21,7 @@ html_Bilanz_am_Abend <- read_html(GET(URL_Bilanz_am_Abend,
 Themen_Mittag <- html_Bilanz_am_Mittag %>%
   html_nodes("div#picturearticle_collection_box p.teaser__text__paragraph") %>% 
   html_text() %>%
-  str_remove("^.+(Themen: |Themen:|Themen :|Themen;)|Rep: ") #wtf SR
+  str_remove("^.+(Themen: |Themen:|Themen :|Themen;)|Rep: ") #wtf SR2?
 
 Themen_Abend <- html_Bilanz_am_Abend %>%
   html_nodes("div#picturearticle_collection_box p.teaser__text__paragraph") %>% 
