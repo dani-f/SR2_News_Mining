@@ -14,6 +14,7 @@ library(dplyr)
 library(lubridate)
 library(ggplot2)
 library(tidytext)
+library(tidyr)
 
 # Load data
 date_of_data_to_load <- "2021-08-26"
@@ -27,6 +28,7 @@ load(file = paste0("data/", "news_", date_of_data_to_load, ".Rdata"))
 The data collected from the webpage goes from 2017-08-31 to 2021-08-26.
 
 ``` r
+# Articles by month
 news %>%
   count(Monat = floor_date(Datum, "month"),
         name = "Artikelanzahl") %>%
@@ -50,10 +52,10 @@ We then observe, while Bilanz am Abend is published on weekdays, Bilanz am Mitta
 ``` r
 # Articles by day of week
 news_clean %>%
-  count(Format, Wochentag = wday(Datum,
-                                 locale = "German",
-                                 label = TRUE)) %>% 
-  ggplot(aes(x = Wochentag, y = n, fill = Format)) +
+  count(Format,
+        Wochentag = wday(Datum, locale = "German", label = TRUE),
+        name = "Anzahl") %>% 
+  ggplot(aes(x = Wochentag, y = Anzahl, fill = Format)) +
   geom_col()
 ```
 
@@ -95,21 +97,22 @@ Let's head on to analyse the content and check which news appear within the dail
 
 ## Keywords by number of appearence
 
-First, we load a dictionary with german stop-words so then, we can delete unnecessary words of the news messages.
+First, we load a dictionary with german stop-words so then we can delete unnecessary words of the news messages.
 
 ``` r
 # Load dictionary
 stop_words_german <-
   data.frame("Wort" = stopwords::stopwords("de", source = "snowball"))
+news_clean_unnested <- news_clean %>%
+  unnest_tokens(output = "Wort", input = Themen) %>% 
+  anti_join(stop_words_german, by = "Wort")
 ```
 
 Now, let's print the top 30 keywords by number of appearance.
 
 ``` r
 # Keyword frecuency
-news_clean %>%
-  unnest_tokens(output = "Wort", input = Themen) %>% 
-  anti_join(stop_words_german, by = "Wort") %>% 
+news_clean_unnested %>% 
   count(Wort, name = "Anzahl", sort = TRUE) %>% 
   head(top_n_keywords)
 ```
@@ -150,12 +153,9 @@ We see, Corona clearly dominated the news and also EU related topics were discus
 
 ``` r
 # Frecuency US related words
-news_clean %>%
-  unnest_tokens(output = "Wort", input = Themen) %>% 
-  anti_join(stop_words_german, by = "Wort") %>% 
-  mutate(Wort = ifelse(Wort %in% c("biden", "trump", 
-                                   "usa", "us"),
-                "US_keywords_summary", Wort)) %>% 
+news_clean_unnested %>% 
+  mutate(Wort = ifelse(Wort %in% c("biden", "trump", "usa", "us"),
+                       "US_keywords_summary", Wort)) %>% 
   count(Wort, name = "Anzahl", sort = TRUE) %>% 
   head(3)
 ```
@@ -165,8 +165,33 @@ news_clean %>%
     ## 2 US_keywords_summary    115
     ## 3                  eu    109
 
-On top of the list we also find Afghanistan, which might have entered the daily news just recently. Let's confirm this statement with our data and print keywords over time.
+On top of the list we also find Afghanistan, which might have entered the daily news just recently. Let's confirm this statement with the data and print keywords over time.
 
 ## Keywords over time
+
+``` r
+# Select keywords
+keywords <- c("lockdown", "corona", "afghanistan")
+
+# Selected keywords over time
+news_clean_unnested %>% 
+  count(Wort, Monat = floor_date(Datum, "month"), name = "Anzahl") %>% 
+  filter(Wort %in% keywords) %>% 
+  # If keyword does not appear in certain month, insert row with explicit 0
+  complete(Monat = seq(
+    from = floor_date(min(news_clean_unnested$Datum), "month"),
+    to = max(news_clean_unnested$Datum),
+    by = "month"),
+    Wort,
+    fill = list(Anzahl = 0)) %>% 
+  ggplot(aes(x = Monat, y = Anzahl, color = Wort)) +
+  geom_line(size = 1) +
+  scale_x_date(breaks = "1 month") +
+  theme(axis.text.x = element_text(angle = 75, vjust = 0.58))
+```
+
+![](analysis_files/figure-markdown_github/keywords%20over%20time-1.png)
+
+Indeed, we see that Afghanistan was almost not presented in the news till early 2021 and then increased majorly from July 2021. While the use of Corona is slowly decreasing, but still present, we see that the word lockdown had a boom in December 2020 and suddenly disappeard after April 2021. Shall we assume there was an internal SR2-guideline that prohibited the use of that word or may the reason be that since May 2021 lockdown measures were removed step by step?
 
 *work in progress*
