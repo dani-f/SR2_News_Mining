@@ -11,57 +11,94 @@ editor_options:
 # Introduction
 Topics are set and public opinion is framed by broadcasting stations. This project wants to analyze the daily news broadcasted by German radio station SR2.
 
-```{r load pckgs and data, echo = FALSE, message = FALSE, warning = FALSE}
+```{r setup, message = FALSE, warning = FALSE}
+# Setup
 # Load pckgs
 library(knitr)
 library(dplyr)
+library(lubridate)
+library(ggplot2)
 library(tidytext)
 
 # Load data
-date_of_data_to_load <- "2021-08-25"
+date_of_data_to_load <- "2021-08-26"
 load(file = paste0("data/", "news_", date_of_data_to_load, ".Rdata"))
 ```
 
 # Analysis
-## Part 1
-Which news appear within the daily news blocks? 
+## Date range
+The data collected from the webpage goes from `r min(news$Datum)` to `r max(news$Datum)`.
 
-### Keywords by number of appearence
-Let's have a look on the keywords. First, we load a dictionary with german stop-words in order to be able to delete unnecessary words of the news messages.
+```{r articles by month, message = FALSE, warning = FALSE}
+news %>%
+  count(Monat = floor_date(Datum, "month"),
+        name = "Artikelanzahl") %>%
+  ggplot(aes(x = Monat, y = Artikelanzahl)) +
+  geom_col() +
+  scale_x_date(date_breaks = "3 months") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+```
+
+Unfortunately, SR2 seems to have deleted their data or they simply did not upload their editions consequently before August 2020. Therefore, to not bias our analysis, the `r news %>% filter(Datum < "2020-08-01") %>% count()` articles from before August 2020 are deleted (listwise deletion, since these are just a few cases).
+
+```{r listwise deletion, message = FALSE, warning = FALSE}
+# Listwise deletion
+news_clean <- news %>% filter(Datum >= "2020-08-01")
+```
+
+We then observe, while Bilanz am Abend is published on weekdays, Bilanz am Mittag also appears on Saturdays. Sunday is holiday.
+
+```{r articles by day of week, message = FALSE, warning = FALSE}
+# Articles by day of week
+news_clean %>%
+  count(Format, Wochentag = wday(Datum,
+                                 locale = "German",
+                                 label = TRUE)) %>% 
+  ggplot(aes(x = Wochentag, y = n, fill = Format)) +
+  geom_col()
+```
+
+When focusing on the narrators, it is interesting to note how the SR webpage content managers do not know the names of their colleagues. See how many different spellings appear here.
+```{r distinct authors, message = FALSE, warning = FALSE}
+# Distinct authors/narrators
+news_clean %>% distinct(Autor) %>% arrange(Autor)
+```
+
+Let's head on to analyse the content and check which news appear within the daily news blocks.
+
+## Keywords by number of appearence
+First, we load a dictionary with german stop-words so then, we can delete unnecessary words of the news messages.
 ```{r load dictionary}
 # Load dictionary
 stop_words_german <-
   data.frame("Wort" = stopwords::stopwords("de", source = "snowball"))
 ```
-Now, let's print the top 30 keywords by number of appearance.
-```{r analysis 1}
-# Analysis
-## Keyword frecuency
-news %>%
+
+Now, let's print the top `r (top_n_keywords <- 30)` keywords by number of appearance.
+```{r keyword frecuency, message = FALSE, warning = FALSE}
+# Keyword frecuency
+news_clean %>%
   unnest_tokens(output = "Wort", input = Themen) %>% 
   anti_join(stop_words_german, by = "Wort") %>% 
   count(Wort, name = "Anzahl", sort = TRUE) %>% 
-  head(30)
-
+  head(top_n_keywords)
 ```
 
-We see, Corona clearly dominated the news and also EU related topics were discussed. Since SR2 is a regional broadcasting station, we also observe the keyword Saarland. If we sum up all US related keywords (Biden, Trump, USA, US) we notice it seems to be another dominant topic yet before topics regarding the EU.
+We see, Corona clearly dominated the news and also EU related topics were discussed. Since SR2 is a regional broadcasting station, we also observe the keyword Saarland. If we sum up all US related keywords (Biden, Trump, USA, US) we notice it is another dominant topic, yet before news about the EU.
 
-```{r analysis 2}
-# Analysis
-## Keyword frecuency US related
-news %>%
+```{r keyword frecuency US related, message = FALSE, warning = FALSE}
+# Frecuency US related words
+news_clean %>%
   unnest_tokens(output = "Wort", input = Themen) %>% 
   anti_join(stop_words_german, by = "Wort") %>% 
   mutate(Wort = ifelse(Wort %in% c("biden", "trump", 
                                    "usa", "us"),
-                "US_keyword", Wort)) %>% 
+                "US_keywords_summary", Wort)) %>% 
   count(Wort, name = "Anzahl", sort = TRUE) %>% 
   head(3)
-
 ```
 
-At the end of the top ten we see Afghanistan, which might have entered the daily news just recently. Let's confirm this statement with our data and print keywords over time.
+On top of the list we also find Afghanistan, which might have entered the daily news just recently. Let's confirm this statement with our data and print keywords over time.
 
-### Keywords over time
+## Keywords over time
 _work in progress_
