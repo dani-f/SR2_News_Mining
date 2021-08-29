@@ -17,7 +17,7 @@ library(tidytext)
 library(tidyr)
 
 # Load data
-date_of_data_to_load <- "2021-08-26"
+date_of_data_to_load <- "2021-08-29"
 load(file = paste0("data/", "news_", date_of_data_to_load, ".Rdata"))
 ```
 
@@ -25,7 +25,7 @@ load(file = paste0("data/", "news_", date_of_data_to_load, ".Rdata"))
 
 ## Date range
 
-The data collected from the webpage goes from 2017-08-31 to 2021-08-26.
+The data collected from the webpage goes from 2017-08-31 to 2021-08-28.
 
 ``` r
 # Articles by month
@@ -80,18 +80,17 @@ news_clean %>% distinct(Autor) %>% arrange(Autor)
     ## 9            Kathrin Aue
     ## 10            Katrin Aue
     ## 11          Lisa Krauser
-    ## 12        Mayer, Florian
-    ## 13       Peter Weitzmann
-    ## 14      SR 2 Kulturradio
-    ## 15      SR 2 KulturRadio
-    ## 16         Stefan Deppen
-    ## 17        Stephan Deppen
-    ## 18       Stephan Deppenh
-    ## 19        Thomas Shihabi
-    ## 20        Thomas SHihabi
-    ## 21 Thomas Shihabi et al.
-    ## 22     Yvonne Scheinhege
-    ## 23    Yvonne Schleinhege
+    ## 12       Peter Weitzmann
+    ## 13      SR 2 Kulturradio
+    ## 14      SR 2 KulturRadio
+    ## 15         Stefan Deppen
+    ## 16        Stephan Deppen
+    ## 17       Stephan Deppenh
+    ## 18        Thomas Shihabi
+    ## 19        Thomas SHihabi
+    ## 20 Thomas Shihabi et al.
+    ## 21     Yvonne Scheinhege
+    ## 22    Yvonne Schleinhege
 
 Let's head on to analyse the content and check which news appear within the daily news blocks.
 
@@ -108,48 +107,49 @@ news_clean_unnested <- news_clean %>%
   anti_join(stop_words_german, by = "Wort")
 ```
 
-Now, let's print the top 30 keywords by number of appearance.
+Now, let's print the top keywords by number of appearance.
 
 ``` r
 # Keyword frecuency
+top_n_keywords <- 30
 news_clean_unnested %>% 
   count(Wort, name = "Anzahl", sort = TRUE) %>% 
   head(top_n_keywords)
 ```
 
     ##           Wort Anzahl
-    ## 1       corona    257
+    ## 1       corona    258
     ## 2           eu    109
-    ## 3         lage     76
-    ## 4     saarland     73
-    ## 5    interview     51
-    ## 6   reaktionen     49
-    ## 7         neue     48
-    ## 8    bundestag     44
-    ## 9  afghanistan     42
+    ## 3         lage     81
+    ## 4     saarland     77
+    ## 5         neue     54
+    ## 6    interview     53
+    ## 7   reaktionen     49
+    ## 8  afghanistan     46
+    ## 9    bundestag     46
     ## 10    lockdown     41
-    ## 11     debatte     37
-    ## 12   kommentar     34
-    ## 13 deutschland     33
-    ## 14       jahre     32
-    ## 15        mehr     32
-    ## 16         usa     32
-    ## 17       china     29
-    ## 18       trump     29
-    ## 19          us     29
-    ## 20       spahn     27
-    ## 21        bund     26
-    ## 22        wahl     26
-    ## 23       woche     26
-    ## 24          ab     25
-    ## 25       biden     25
-    ## 26    aktuelle     24
-    ## 27  diskussion     24
-    ## 28      merkel     24
-    ## 29      berlin     23
-    ## 30  frankreich     23
+    ## 11     debatte     38
+    ## 12        mehr     36
+    ## 13 deutschland     35
+    ## 14         usa     35
+    ## 15   kommentar     34
+    ## 16       china     32
+    ## 17       jahre     32
+    ## 18       trump     31
+    ## 19          us     31
+    ## 20       woche     29
+    ## 21    aktuelle     28
+    ## 22       spahn     28
+    ## 23        wahl     28
+    ## 24        bund     27
+    ## 25          ab     26
+    ## 26  diskussion     26
+    ## 27       biden     25
+    ## 28   impfstoff     25
+    ## 29  frankreich     24
+    ## 30      länder     24
 
-We see, Corona clearly dominated the news and also EU related topics were discussed. Since SR2 is a regional broadcasting station, we also observe the keyword Saarland. If we sum up all US related keywords (Biden, Trump, USA, US) we notice it is another dominant topic, yet before news about the EU.
+We see, Corona clearly dominated the news and also EU related topics were discussed. Since SR2 is a regional broadcasting station, we also observe the keyword Saarland. If we sum up all US related keywords that show up (Biden, Trump, USA, US) we notice it is another dominant topic, yet before news about the EU.
 
 ``` r
 # Frecuency US related words
@@ -161,8 +161,8 @@ news_clean_unnested %>%
 ```
 
     ##                  Wort Anzahl
-    ## 1              corona    257
-    ## 2 US_keywords_summary    115
+    ## 1              corona    258
+    ## 2 US_keywords_summary    122
     ## 3                  eu    109
 
 On top of the list we also find Afghanistan, which might have entered the daily news just recently. Let's confirm this statement with the data and print keywords over time.
@@ -171,7 +171,7 @@ On top of the list we also find Afghanistan, which might have entered the daily 
 
 ``` r
 # Select keywords
-keywords <- c("lockdown", "corona", "afghanistan")
+keywords <- c("lockdown", "corona", "afghanistan", "kabul")
 
 # Selected keywords over time
 news_clean_unnested %>% 
@@ -192,6 +192,8 @@ news_clean_unnested %>%
 
 ![](analysis_files/figure-markdown_github/keywords%20over%20time-1.png)
 
-Indeed, we see that Afghanistan was almost not presented in the news till early 2021 and then increased majorly from July 2021. While the use of Corona is slowly decreasing, but still present, we see that the word lockdown had a boom in December 2020 and suddenly disappeard after April 2021. Shall we assume there was an internal SR2-guideline that prohibited the use of that word or may the reason be that since May 2021 lockdown measures were removed step by step?
+Indeed, we see that Afghanistan and its capital Kabul were almost not presented in the news till early 2021 and then increased heavily from July 2021. While the discourse about Corona is slowly decreasing, although still present, we see that the word lockdown had a boom in December 2020 and suddenly disappeard after April 2021. Shall we assume there was an internal SR2-guideline that prohibited using that word or may the reason be that since May 2021 lockdown measures were removed step by step?
 
-*work in progress*
+<p style="color:red;font-style:italic">
+work in progress
+</p>

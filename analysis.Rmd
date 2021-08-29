@@ -22,7 +22,7 @@ library(tidytext)
 library(tidyr)
 
 # Load data
-date_of_data_to_load <- "2021-08-26"
+date_of_data_to_load <- "2021-08-29"
 load(file = paste0("data/", "news_", date_of_data_to_load, ".Rdata"))
 ```
 
@@ -79,15 +79,16 @@ news_clean_unnested <- news_clean %>%
   anti_join(stop_words_german, by = "Wort")
 ```
 
-Now, let's print the top `r (top_n_keywords <- 30)` keywords by number of appearance.
+Now, let's print the top keywords by number of appearance.
 ```{r keyword frecuency, message = FALSE, warning = FALSE}
 # Keyword frecuency
+top_n_keywords <- 30
 news_clean_unnested %>% 
   count(Wort, name = "Anzahl", sort = TRUE) %>% 
   head(top_n_keywords)
 ```
 
-We see, Corona clearly dominated the news and also EU related topics were discussed. Since SR2 is a regional broadcasting station, we also observe the keyword Saarland. If we sum up all US related keywords (Biden, Trump, USA, US) we notice it is another dominant topic, yet before news about the EU.
+We see, Corona clearly dominated the news and also EU related topics were discussed. Since SR2 is a regional broadcasting station, we also observe the keyword Saarland. If we sum up all US related keywords that show up (Biden, Trump, USA, US) we notice it is another dominant topic, yet before news about the EU.
 
 ```{r keyword frecuency US related, message = FALSE, warning = FALSE}
 # Frecuency US related words
@@ -104,7 +105,7 @@ On top of the list we also find Afghanistan, which might have entered the daily 
 
 ```{r keywords over time, message = FALSE, warning = FALSE}
 # Select keywords
-keywords <- c("lockdown", "corona", "afghanistan")
+keywords <- c("lockdown", "corona", "afghanistan", "kabul")
 
 # Selected keywords over time
 news_clean_unnested %>% 
@@ -123,8 +124,8 @@ news_clean_unnested %>%
   theme(axis.text.x = element_text(angle = 75, vjust = 0.58))
 ```
 
-Indeed, we see that Afghanistan was almost not presented in the news till early 2021 and then increased majorly from July 2021. While the use of Corona is slowly decreasing, but still present, we see that the word lockdown had a boom in December 2020 and suddenly disappeard after April 2021. Shall we assume there was an internal SR2-guideline that prohibited the use of that word or may the reason be that since May 2021 lockdown measures were removed step by step?
+Indeed, we see that Afghanistan and its capital Kabul were almost not presented in the news till early 2021 and then increased heavily from July 2021. While the discourse about Corona is slowly decreasing, although still present, we see that the word lockdown had a boom in December 2020 and suddenly disappeard after April 2021. Shall we assume there was an internal SR2-guideline that prohibited using that word or may the reason be that since May 2021 lockdown measures were removed step by step?
 
 
-_work in progress_
+<p style="color:red;font-style:italic">work in progress</p>
 
