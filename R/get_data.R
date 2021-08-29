@@ -85,7 +85,7 @@ Autor_Mittag <- Autor_Mittag %>%
 ### Clean Themen
 # Match start of the input, then everything including \n
 Themen_Mittag <- Themen_Mittag %>%
-  str_remove(regex("\\A.*(Themen: |Themen:|Themen :|Themen;|Rep: )",
+  str_remove(regex("\\A.*(Themen: |Themen:|Themen :|Themen;|Rep: )", # Help: Does anyone have a more robust solution to detect those incoherent spellings?
                    dotall = TRUE)) %>% 
   # Match end of the input, then any whitespace including \n \t
   str_remove("\\s+Artikel mit anderen teilen\\z")
@@ -135,6 +135,6 @@ news <- bind_rows("Mittag" = Bilanz_am_Mittag,
                   "Abend" = Bilanz_am_Abend,
                   .id = "Format")
 
-# Save data frames
+# Save data frame
 save(news, file = paste0("data/", "news_", Sys.Date(), ".Rdata"))
 write.csv2(news, file = paste0("data/", "news_", Sys.Date(), ".csv"))
