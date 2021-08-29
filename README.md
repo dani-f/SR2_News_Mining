@@ -3,11 +3,17 @@ _Analysing news broadcasted by German radio station SR2_
 
 Topics are set and public opinion is framed by broadcasting stations. This project wants to analyze the daily news broadcasted by German radio station SR2. The guiding idea of this analysis is to see how many times a certain news-message is transmitted and how the main news-themes develop over time.
 
+## Who is SR2?
+SR 2 Kulturradio is the cultural channel of Saarländischer Rundfunk, a regional state-owned broadcasting station. It aims to provide a diverse program, including background content information  on politics and world affairs.
+
 ## Source
-The data should be gathered from officially accessible documents, in order not to directly depend on the willingness of somebody to provide information. In this case, the data are scraped from the SR2 web page; precisely from the two main news formats the channel transmits (Bilanz am Mittag and Bilanz am Abend).
+The data should be gathered from officially accessible documents, in order not to directly depend on the willingness of somebody to provide information. In this case, the data are scraped from the SR2 web page. As the webpage lacks for information about the hourly news blocks, the project focuses on the two main news formats (Bilanz am Mittag and Bilanz am Abend).
 
 ## Structure
 Data are first scraped with R/get_data.R, then saved as a .csv or .Rdata file. Data exploration and visualizations are created within analysis.md (generated from within RStudio by analysis.Rmd).
+
+## Perspective
+This project can be a tool for anyone who wants to start analysing news formats. It could be extended for comparison with other cultural channels and examine differences between them. The analysis could also be extended sharpening the insights obtained about SR2. There is a lot of potential and it is currently a work in progress. As I create it, the code here is updated. This openness also allows users to contribute or to use it as a starting point for their own analysis if they wish.
 
 ## Software
 - R (version 3.6.2)
