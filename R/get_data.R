@@ -8,8 +8,8 @@ library(tibble)
 library(lubridate)
 
 # Pass URLs
-URL_Bilanz_am_Mittag <- "https://dev2.sr-mediathek.sr-multimedia.de/index.php?seite=8&sen=SR2_BAM_P&tbl=pf"
-URL_Bilanz_am_Abend <- "https://dev2.sr-mediathek.sr-multimedia.de/index.php?seite=8&sen=SR2_BAA_P&tbl=pf"
+URL_Bilanz_am_Mittag <- "https://www.sr-mediathek.de/index.php?seite=8&sen=SR2_BAM_P"
+URL_Bilanz_am_Abend <- "https://sr-mediathek.de/index.php?seite=8&sen=SR2_BAA_P"
 
 # Scrape html
 html_Bilanz_am_Mittag <- read_html(GET(URL_Bilanz_am_Mittag,
@@ -22,12 +22,12 @@ html_Bilanz_am_Abend <- read_html(GET(URL_Bilanz_am_Abend,
 Links_Mittag <- html_Bilanz_am_Mittag %>%
   html_nodes("h3 a") %>%
   html_attr("href")
-Links_Mittag <- paste0("https://dev2.sr-mediathek.sr-multimedia.de/", Links_Mittag)
+Links_Mittag <- paste0("https://www.sr-mediathek.de/", Links_Mittag)
 
 ## Links Abend
 Links_Abend <- html_Bilanz_am_Abend %>%
   html_nodes("h3 a") %>% html_attr("href")
-Links_Abend <- paste0("https://dev2.sr-mediathek.sr-multimedia.de/", Links_Abend)
+Links_Abend <- paste0("https://www.sr-mediathek.de/", Links_Abend)
 
 ## Länge und Datum Mittag
 Laenge_Datum_Mittag <- html_Bilanz_am_Mittag %>%
