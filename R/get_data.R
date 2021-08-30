@@ -85,7 +85,7 @@ Autor_Mittag <- Autor_Mittag %>%
 ### Clean Themen
 # Match start of the input, then everything including \n
 Themen_Mittag <- Themen_Mittag %>%
-  str_remove(regex("\\A.*(Themen: |Themen:|Themen :|Themen;|Rep: )", # Help: Does anyone have a more robust solution to detect those incoherent spellings?
+  str_remove(regex("\\A.*(Themen: |Themen:|Themen :|Themen;|Rep: )", # Does anyone have a more robust solution to detect those incoherent spellings?
                    dotall = TRUE)) %>% 
   # Match end of the input, then any whitespace including \n \t
   str_remove("\\s+Artikel mit anderen teilen\\z")
