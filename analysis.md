@@ -23,7 +23,7 @@ load(file = paste0("data/", "news_", date_of_data_to_load, ".Rdata"))
 
 # Analysis
 
-The data collected from the webpage goes from 2017-08-31 to 2021-08-28.
+The data collected from the webpage go from 2017-08-31 to 2021-08-28.
 
 ``` r
 # Articles by month
@@ -190,6 +190,6 @@ news_clean_unnested %>%
 
 ![](analysis_files/figure-markdown_github/keywords%20over%20time-1.png)
 
-Indeed, we see that Afghanistan and its capital Kabul were almost not presented in the news till early 2021 and then increased heavily from July 2021. While the discourse about Corona is slowly decreasing, although still present, we see that the word lockdown had a boom in December 2020 and suddenly disappeard after April 2021. Shall we assume there was an internal SR2-guideline that prohibited using that word or may the reason be that since May 2021 lockdown measures were removed step by step?
+Indeed, we see that Afghanistan and its capital Kabul were almost not present in the news till early 2021 and then increased heavily from July 2021. While the discourse about Corona is slowly decreasing, although still present, we see that the word lockdown had a boom in December 2020 and suddenly disappeard after April 2021. Shall we assume there was an internal SR2-guideline that prohibited using that word or may the reason be that since May 2021 lockdown measures were removed step by step?
 
 *work in progress*
