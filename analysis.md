@@ -17,13 +17,13 @@ library(tidytext)
 library(tidyr)
 
 # Load data
-date_of_data_to_load <- "2021-08-29"
+date_of_data_to_load <- "2021-08-30"
 load(file = paste0("data/", "news_", date_of_data_to_load, ".Rdata"))
 ```
 
 # Analysis
 
-The data collected from the webpage go from 2017-08-31 to 2021-08-28.
+The data collected from the webpage go from 2017-08-31 to 2021-08-30.
 
 ``` r
 # Articles by month
@@ -116,12 +116,12 @@ news_clean_unnested %>%
 ```
 
     ##           Wort Anzahl
-    ## 1       corona    258
-    ## 2           eu    109
+    ## 1       corona    256
+    ## 2           eu    108
     ## 3         lage     81
-    ## 4     saarland     77
-    ## 5         neue     54
-    ## 6    interview     53
+    ## 4     saarland     78
+    ## 5         neue     53
+    ## 6    interview     52
     ## 7   reaktionen     49
     ## 8  afghanistan     46
     ## 9    bundestag     46
@@ -132,13 +132,13 @@ news_clean_unnested %>%
     ## 14         usa     35
     ## 15   kommentar     34
     ## 16       china     32
-    ## 17       jahre     32
+    ## 17       jahre     31
     ## 18       trump     31
-    ## 19          us     31
-    ## 20       woche     29
-    ## 21    aktuelle     28
-    ## 22       spahn     28
-    ## 23        wahl     28
+    ## 19          us     30
+    ## 20    aktuelle     28
+    ## 21       spahn     28
+    ## 22        wahl     28
+    ## 23       woche     28
     ## 24        bund     27
     ## 25          ab     26
     ## 26  diskussion     26
@@ -159,9 +159,9 @@ news_clean_unnested %>%
 ```
 
     ##                  Wort Anzahl
-    ## 1              corona    258
-    ## 2 US_keywords_summary    122
-    ## 3                  eu    109
+    ## 1              corona    256
+    ## 2 US_keywords_summary    121
+    ## 3                  eu    108
 
 On top of the list we also find Afghanistan, which might have entered the daily news just recently. Let's confirm this statement with the data and print keywords over time.
 
