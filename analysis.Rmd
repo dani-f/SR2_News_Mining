@@ -60,6 +60,7 @@ news_clean %>%
 ```
 
 When focusing on the narrators, it is interesting to note how the SR webpage content managers do not know the names of their colleagues. See how many different spellings appear here.
+
 ```{r distinct authors, message = FALSE, warning = FALSE}
 # Distinct authors/narrators
 news_clean %>% distinct(Autor) %>% arrange(Autor)
@@ -73,6 +74,7 @@ First, we load a dictionary with german stop-words so then we can delete unneces
 # Load dictionary
 stop_words_german <-
   data.frame("Wort" = stopwords::stopwords("de", source = "snowball"))
+# Delete stopwords
 news_clean_unnested <- news_clean %>%
   unnest_tokens(output = "Wort", input = Themen) %>% 
   anti_join(stop_words_german, by = "Wort")

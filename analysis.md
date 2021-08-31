@@ -100,6 +100,7 @@ First, we load a dictionary with german stop-words so then we can delete unneces
 # Load dictionary
 stop_words_german <-
   data.frame("Wort" = stopwords::stopwords("de", source = "snowball"))
+# Delete stopwords
 news_clean_unnested <- news_clean %>%
   unnest_tokens(output = "Wort", input = Themen) %>% 
   anti_join(stop_words_german, by = "Wort")
