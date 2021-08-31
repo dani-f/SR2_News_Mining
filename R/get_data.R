@@ -9,7 +9,7 @@ library(lubridate)
 
 # Pass URLs
 URL_Bilanz_am_Mittag <- "https://www.sr-mediathek.de/index.php?seite=8&sen=SR2_BAM_P"
-URL_Bilanz_am_Abend <- "https://sr-mediathek.de/index.php?seite=8&sen=SR2_BAA_P"
+URL_Bilanz_am_Abend <- "https://www.sr-mediathek.de/index.php?seite=8&sen=SR2_BAA_P"
 
 # Scrape html
 html_Bilanz_am_Mittag <- read_html(GET(URL_Bilanz_am_Mittag,
@@ -29,12 +29,12 @@ Links_Abend <- html_Bilanz_am_Abend %>%
   html_nodes("h3 a") %>% html_attr("href")
 Links_Abend <- paste0("https://www.sr-mediathek.de/", Links_Abend)
 
-## Länge und Datum Mittag
+## Länge and Datum Mittag
 Laenge_Datum_Mittag <- html_Bilanz_am_Mittag %>%
   html_nodes("div#picturearticle_collection_box div.teaser__text__footer__wrapper") %>% 
   html_text() %>% 
   str_extract_all("Länge.{10}|Datum.{12}")
-### Clean Länge und Datum
+### Clean Länge and Datum
 Laenge_Datum_Mittag <-
   matrix(unlist(Laenge_Datum_Mittag),
          nrow = length(Laenge_Datum_Mittag),
@@ -46,12 +46,12 @@ Laenge_Datum_Mittag <-
          Datum = as.Date(Datum, format = "%d.%m.%Y")) %>% 
   select(Laenge, Datum)
 
-## Länge und Datum Abend
+## Länge and Datum Abend
 Laenge_Datum_Abend <- html_Bilanz_am_Abend %>%
   html_nodes("div#picturearticle_collection_box div.teaser__text__footer__wrapper") %>% 
   html_text() %>% 
   str_extract_all("Länge.{10}|Datum.{12}")
-### Clean Länge und Datum
+### Clean Länge and Datum
 Laenge_Datum_Abend <-
   matrix(unlist(Laenge_Datum_Abend),
          nrow = length(Laenge_Datum_Abend),
@@ -63,7 +63,7 @@ Laenge_Datum_Abend <-
          Datum = as.Date(Datum, format = "%d.%m.%Y")) %>% 
   select(Laenge, Datum)
 
-## Autor und Themen Mittag
+## Autor and Themen Mittag
 Autor_Mittag <- 0
 Themen_Mittag <- 0
 for (i in 1:length(Links_Mittag)) { 
@@ -83,14 +83,14 @@ Autor_Mittag <- Autor_Mittag %>%
   str_extract_all("SR 2 - .+") %>%
   str_sub(start = 8)
 ### Clean Themen
-# Match start of the input, then everything including \n
 Themen_Mittag <- Themen_Mittag %>%
+  # Match start of the input, then everything including \n
   str_remove(regex("\\A.*(Themen: |Themen:|Themen :|Themen;|Rep: )", # Does anyone have a more robust solution to detect those incoherent spellings?
                    dotall = TRUE)) %>% 
   # Match end of the input, then any whitespace including \n \t
   str_remove("\\s+Artikel mit anderen teilen\\z")
 
-## Autor und Themen Abend
+## Autor and Themen Abend
 Autor_Abend <- 0
 Themen_Abend <- 0
 for (i in 1:length(Links_Abend)) { 
@@ -110,8 +110,8 @@ Autor_Abend <- Autor_Abend %>%
   str_extract_all("SR 2 - .+") %>%
   str_sub(start = 8)
 ### Clean Themen
-# Match start of the input, then everything including \n
 Themen_Abend <- Themen_Abend %>%
+  # Match start of the input, then everything including \n
   str_remove(regex("\\A.*(Themen: |Themen:|Themen :|Themen;|Rep: )",
                    dotall = TRUE)) %>% 
   # Match end of the input, then any whitespace including \n \t
