@@ -22,7 +22,7 @@ library(tidytext)
 library(tidyr)
 
 # Load data
-date_of_data_to_load <- "2021-08-30"
+date_of_data_to_load <- "2021-10-05"
 load(file = paste0("data/", "news_", date_of_data_to_load, ".Rdata"))
 ```
 
