@@ -8,10 +8,18 @@ editor_options:
 
 <!-- analysis.md is generated from analysis.Rmd -->
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>", message = FALSE, warning = FALSE
+  )
+```
+
+
 # Introduction
+
 Topics are set and public opinion is framed by broadcasting stations. This project wants to analyze the daily news broadcasted by German radio station SR2.
 
-```{r setup, message = FALSE, warning = FALSE}
+```{r setup}
 # Setup
 # Load pckgs
 library(knitr)
@@ -20,18 +28,53 @@ library(lubridate)
 library(ggplot2)
 library(tidytext)
 library(tidyr)
+library(stringr)
+library(purrr)
 
 # Load data
-date_of_data_to_load <- "2021-10-05"
-load(file = paste0("data/", "news_", date_of_data_to_load, ".Rdata"))
+folder <- "data"
+files <- list.files(folder, pattern = ".Rdata", full.names = TRUE)
+
+loaded_data <- vector("list")
+for (file in files) {
+  load(file)
+  loaded_data[[file]] <- news  # Assuming the data frames are named "news"
+}
+
+news_raw <- map2(loaded_data, names(loaded_data), ~mutate(.x, source_file = .y)) %>% 
+  map(bind_rows) %>%
+  list_rbind()
 ```
 
 # Analysis
-The data collected from the webpage go from `r min(news$Datum)` to `r max(news$Datum)`.
 
-```{r articles by month, message = FALSE, warning = FALSE}
-# Articles by month
+The data collected from the webpage goes from `r min(news$Datum)` to `r max(news$Datum)`.
+
+If we have a closer look on the URLs, we can see that every article has an identification number associated which comes after the `id=` parameter and at a similar position for each URL.
+```{r extract identifier}
+news <- news_raw %>% 
+  mutate(id = str_replace(Links, ".+id=(\\d+).*", "\\1"))
+news %>% select(id, Links) %>% head(3) %>% kable()
+```
+
+By clicking on a link, we also note, that many pages have gone offline already. Because we have scraped the page over time, we can now observe that a few articles have modified their news message afterwards. However, these were only minor changes.
+
+```{r keep only distinct articles, results = 'hold'}
 news %>%
+  left_join(news, join_by(id), suffix = c("_Version_A", "_Version_B")) %>%
+  filter(Themen_Version_A != Themen_Version_B) %>% 
+  select(id, starts_with("Themen")) %>% 
+  distinct(id, .keep_all = TRUE) %>% 
+  kable()
+news_distinct <- news %>% distinct(id, .keep_all = TRUE)
+
+```
+
+Let's examine the time frame covered by the articles.
+
+```{r articles by month}
+# Articles by month
+news_distinct %>%
   count(Monat = floor_date(Datum, "month"),
         name = "Artikelanzahl") %>%
   ggplot(aes(x = Monat, y = Artikelanzahl)) +
@@ -40,16 +83,16 @@ news %>%
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
 ```
 
-Unfortunately, SR2 seems to have deleted their data or they simply did not upload their editions consequently before August 2020. Therefore, to not bias our analysis, the `r news %>% filter(Datum < "2020-08-01") %>% count()` articles from before August 2020 are deleted (listwise deletion, since these are just a few cases).
+Apparently our data shows two time periods that are uncovered. The first is before August 2020. Unfortunately, SR2 seems to have deleted their data or they simply did not upload their editions consequently before that date. Therefore, to not bias our analysis, the `r news %>% filter(Datum < "2020-08-01") %>% count()` articles from before August 2020 are deleted (listwise deletion, since these are just a few cases). Moreover, we identify a significant gap in information between February and November 2022. You see, behind this code there is a human and humans aren't robots. Sometimes life throws in its own surprises and a unique blend of personal events turned me into something of a "human in vacation mode." But I'm back in action now!😊
 
-```{r listwise deletion, message = FALSE, warning = FALSE}
+```{r listwise deletion}
 # Listwise deletion
-news_clean <- news %>% filter(Datum >= "2020-08-01")
+news_clean <- news_distinct %>% filter(Datum >= "2020-08-01")
 ```
 
 We then observe, while Bilanz am Abend is published on weekdays, Bilanz am Mittag also appears on Saturdays. Sunday is holiday.
 
-```{r articles by day of week, message = FALSE, warning = FALSE}
+```{r articles by day of week}
 # Articles by day of week
 news_clean %>%
   count(Format,
@@ -61,7 +104,7 @@ news_clean %>%
 
 When focusing on the narrators, it is interesting to note how the SR webpage content managers do not know the names of their colleagues. See how many different spellings appear here.
 
-```{r distinct authors, message = FALSE, warning = FALSE}
+```{r distinct authors}
 # Distinct authors/narrators
 news_clean %>% distinct(Autor) %>% arrange(Autor)
 ```
@@ -69,7 +112,9 @@ news_clean %>% distinct(Autor) %>% arrange(Autor)
 Let's head on to analyse the content and check which news appear within the daily news blocks.
 
 ## Keywords by number of appearence
+
 First, we load a dictionary with german stop-words so then we can delete unnecessary words of the news messages.
+
 ```{r load dictionary}
 # Load dictionary
 stop_words_german <-
@@ -81,7 +126,8 @@ news_clean_unnested <- news_clean %>%
 ```
 
 Now, let's print the top keywords by number of appearance.
-```{r keyword frecuency, message = FALSE, warning = FALSE}
+
+```{r keyword frecuency}
 # Keyword frecuency
 top_n_keywords <- 30
 news_clean_unnested %>% 
@@ -91,7 +137,7 @@ news_clean_unnested %>%
 
 We see, Corona clearly dominated the news and also EU related topics were discussed. Since SR2 is a regional broadcasting station, we also observe the keyword Saarland. If we sum up all US related keywords that show up (Biden, Trump, USA, US) we notice it is another dominant topic, yet before news about the EU.
 
-```{r keyword frecuency US related, message = FALSE, warning = FALSE}
+```{r keyword frecuency US related}
 # Frecuency US related words
 news_clean_unnested %>% 
   mutate(Wort = ifelse(Wort %in% c("biden", "trump", "usa", "us"),
@@ -104,9 +150,9 @@ On top of the list we also find Afghanistan, which might have entered the daily 
 
 ## Keywords over time
 
-```{r keywords over time, message = FALSE, warning = FALSE}
+```{r keywords over time}
 # Select keywords
-keywords <- c("lockdown", "corona", "afghanistan", "kabul")
+keywords <- c("lockdown", "corona", "afghanistan", "kabul", "ukraine", "russland", "gaza", "israel", "china", "türkei", "italien", "usa", "selenskyj")
 
 # Selected keywords over time
 news_clean_unnested %>% 
@@ -121,12 +167,11 @@ news_clean_unnested %>%
     fill = list(Anzahl = 0)) %>% 
   ggplot(aes(x = Monat, y = Anzahl, color = Wort)) +
   geom_line(size = 1) +
+  facet_wrap(~Wort) +
   scale_x_date(breaks = "1 month") +
   theme(axis.text.x = element_text(angle = 75, vjust = 0.58))
 ```
 
 Indeed, we see that Afghanistan and its capital Kabul were almost not present in the news till early 2021 and then increased heavily from July 2021. While the discourse about Corona is slowly decreasing, although still present, we see that the word lockdown had a boom in December 2020 and suddenly disappeard after April 2021. Shall we assume there was an internal SR2-guideline that prohibited using that word or may the reason be that since May 2021 lockdown measures were removed step by step?
 
-
-_work in progress_
-
+*work in progress*
