@@ -150,7 +150,7 @@ On top of the list we also find Afghanistan, which might have entered the daily 
 
 ## Keywords over time
 
-```{r keywords over time}
+```{r keywords-over-time}
 # Select keywords
 keywords <- c("lockdown", "corona", "afghanistan", "kabul", "ukraine", "russland", "gaza", "israel", "china", "türkei", "italien", "selenskyj")
 

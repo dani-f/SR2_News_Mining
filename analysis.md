@@ -278,7 +278,7 @@ news_clean_unnested %>%
   theme(axis.text.x = element_text(angle = 75, vjust = 0.58))
 ```
 
-![](analysis_files/figure-gfm/keywords%20over%20time-1.png)<!-- -->
+![](analysis_files/figure-gfm/keywords-over-time-1.png)<!-- -->
 
 Indeed, we see that Afghanistan and its capital Kabul were almost not
 present in the news till early 2021 and then increased heavily from July
