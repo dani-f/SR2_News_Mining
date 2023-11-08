@@ -274,7 +274,7 @@ news_clean_unnested %>%
   ggplot(aes(x = Monat, y = Anzahl, color = Wort)) +
   geom_line(size = 1) +
   facet_wrap(~Wort) +
-  scale_x_date(breaks = "3 month") +
+  scale_x_date(breaks = "6 month") +
   theme(axis.text.x = element_text(angle = 75, vjust = 0.58))
 ```
 
