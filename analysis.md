@@ -109,7 +109,7 @@ news_clean <- news_distinct %>% filter(Datum >= "2020-08-01")
 ```
 
 We then observe, while Bilanz am Abend is published on weekdays, Bilanz
-am Mittag also appears on Saturdays. Sunday is holiday.
+am Mittag also appears on Saturdays. Sunday is a holiday.
 
 ``` r
 # Articles by day of week

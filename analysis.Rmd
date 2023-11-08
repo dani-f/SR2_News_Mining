@@ -90,7 +90,7 @@ Apparently our data shows two time periods that are uncovered. The first is befo
 news_clean <- news_distinct %>% filter(Datum >= "2020-08-01")
 ```
 
-We then observe, while Bilanz am Abend is published on weekdays, Bilanz am Mittag also appears on Saturdays. Sunday is holiday.
+We then observe, while Bilanz am Abend is published on weekdays, Bilanz am Mittag also appears on Saturdays. Sunday is a holiday.
 
 ```{r articles by day of week}
 # Articles by day of week
