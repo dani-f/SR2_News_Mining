@@ -258,7 +258,7 @@ and print keywords over time.
 
 ``` r
 # Select keywords
-keywords <- c("lockdown", "corona", "afghanistan", "kabul", "ukraine", "russland", "gaza", "israel", "china", "türkei", "italien", "usa", "selenskyj")
+keywords <- c("lockdown", "corona", "afghanistan", "kabul", "ukraine", "russland", "gaza", "israel", "china", "türkei", "italien", "selenskyj")
 
 # Selected keywords over time
 news_clean_unnested %>% 
@@ -274,7 +274,7 @@ news_clean_unnested %>%
   ggplot(aes(x = Monat, y = Anzahl, color = Wort)) +
   geom_line(size = 1) +
   facet_wrap(~Wort) +
-  scale_x_date(breaks = "1 month") +
+  scale_x_date(breaks = "3 month") +
   theme(axis.text.x = element_text(angle = 75, vjust = 0.58))
 ```
 
