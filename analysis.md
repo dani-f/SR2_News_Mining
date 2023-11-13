@@ -296,14 +296,7 @@ news_unnested %>%
 ![](analysis_files/figure-gfm/keywords-over-time-1.png)<!-- -->
 
 Additional to the temporal evolution, it’s also interesting to observe
-the distribution of these keywords within the week. Corona and the
-Ukraine dominate news during the week, indicating perhaps an avoidance
-of such pressing topics on weekends. Saturdays seem reserved for more
-background information, as implied by the prominence of the word
-“Interview”. US-related topics persist from Monday to Saturday, and I
-wonder why a similar pattern doesn’t seem to hold for other countries,
-such as China. Regional messages concerning the Bundestag (the German
-Parliament), Saarland or the EU take center stage during weekdays.
+the distribution of these keywords within the week.
 
 ``` r
 news_unnested %>% 
@@ -332,5 +325,14 @@ news_unnested %>%
 | ukraine             |  21 |  24 |  18 |  16 |  25 |   6 |           110 |
 | neue                |  30 |  19 |  16 |  14 |  17 |  12 |           108 |
 | china               |  23 |  21 |  17 |  17 |  18 |   3 |            99 |
+
+Corona and the Ukraine dominate news during the week, indicating perhaps
+an avoidance of such pressing topics on weekends. Saturdays seem
+reserved for more background information, as implied by the prominence
+of the word “Interview”. US-related topics persist from Monday to
+Saturday, and I wonder why a similar pattern doesn’t seem to hold for
+other countries, such as China. Regional messages concerning the
+Bundestag (the German Parliament), Saarland or the EU take center stage
+during weekdays.
 
 *work in progress*

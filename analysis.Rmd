@@ -181,7 +181,7 @@ news_unnested %>%
         axis.text.x = element_text(angle = 75, vjust = 0.58))
 ```
 
-Additional to the temporal evolution, it's also interesting to observe the distribution of these keywords within the week. Corona and the Ukraine dominate news during the week, indicating perhaps an avoidance of such pressing topics on weekends. Saturdays seem reserved for more background information, as implied by the prominence of the word "Interview". US-related topics persist from Monday to Saturday, and I wonder why a similar pattern doesn't seem to hold for other countries, such as China. Regional messages concerning the Bundestag (the German Parliament), Saarland or the EU take center stage during weekdays. 
+Additional to the temporal evolution, it's also interesting to observe the distribution of these keywords within the week.
 
 ```{r keywords by weekday}
 news_unnested %>% 
@@ -198,5 +198,6 @@ news_unnested %>%
   kable()
 ```
 
+Corona and the Ukraine dominate news during the week, indicating perhaps an avoidance of such pressing topics on weekends. Saturdays seem reserved for more background information, as implied by the prominence of the word "Interview". US-related topics persist from Monday to Saturday, and I wonder why a similar pattern doesn't seem to hold for other countries, such as China. Regional messages concerning the Bundestag (the German Parliament), Saarland or the EU take center stage during weekdays. 
 
 *work in progress*
