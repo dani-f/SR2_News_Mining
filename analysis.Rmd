@@ -105,7 +105,7 @@ When focusing on the narrators, it is interesting to note how the SR webpage con
 
 ```{r distinct authors, out.height = "50%"}
 # Distinct authors/narrators
-news_filtered %>% distinct(Autor) %>% arrange(Autor) %>% print(n = nrow(.))
+news_filtered %>% distinct(Autor) %>% arrange(Autor) %>% print(n = Inf)
 ```
 
 Let's head over to analyse the content and check which news appear within the daily news blocks.
@@ -131,7 +131,7 @@ Now, let's plot the top keywords by number of appearance.
 top_n_keywords <- news_unnested %>%
   count(Wort, name = "Anzahl", sort = TRUE)
 
-top_n_keywords %>% print(n = 30)
+top_n_keywords %>% head(30) %>% print(n = Inf)
 ```
 
 The keyword frequency is visually represented by the following word cloud.
