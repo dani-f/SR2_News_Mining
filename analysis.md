@@ -128,7 +128,7 @@ how many different spellings appear here.
 
 ``` r
 # Distinct authors/narrators
-news_filtered %>% distinct(Autor) %>% arrange(Autor) %>% print(n = nrow(.))
+news_filtered %>% distinct(Autor) %>% arrange(Autor) %>% print(n = Inf)
 ```
 
     #> # A tibble: 36 × 1
@@ -196,10 +196,10 @@ Now, let’s plot the top keywords by number of appearance.
 top_n_keywords <- news_unnested %>%
   count(Wort, name = "Anzahl", sort = TRUE)
 
-top_n_keywords %>% print(n = 30)
+top_n_keywords %>% head(30) %>% print(n = Inf)
 ```
 
-    #> # A tibble: 8,594 × 2
+    #> # A tibble: 30 × 2
     #>    Wort        Anzahl
     #>    <chr>        <int>
     #>  1 corona         384
@@ -232,7 +232,6 @@ top_n_keywords %>% print(n = 30)
     #> 28 treffen         61
     #> 29 afd             58
     #> 30 aktuelle        58
-    #> # ℹ 8,564 more rows
 
 The keyword frequency is visually represented by the following word
 cloud.
