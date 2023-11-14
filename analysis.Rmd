@@ -161,7 +161,7 @@ news_unnested %>%
   mutate(Word = ifelse(Wort %in% usa_keywords,
                        "US_keywords_summary", Wort),
          Weekday = wday(Datum, label = TRUE)) %>% 
-  count(Weekday, Wort, name = "Count", sort = TRUE) %>% 
+  count(Weekday, Word, name = "Count", sort = TRUE) %>% 
   arrange(Weekday) %>% 
   pivot_wider(names_from = Weekday, values_from = Count, values_fill = 0) %>% 
   rowwise() %>% 

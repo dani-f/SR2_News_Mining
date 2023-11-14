@@ -276,7 +276,7 @@ news_unnested %>%
   mutate(Word = ifelse(Wort %in% usa_keywords,
                        "US_keywords_summary", Wort),
          Weekday = wday(Datum, label = TRUE)) %>% 
-  count(Weekday, Wort, name = "Count", sort = TRUE) %>% 
+  count(Weekday, Word, name = "Count", sort = TRUE) %>% 
   arrange(Weekday) %>% 
   pivot_wider(names_from = Weekday, values_from = Count, values_fill = 0) %>% 
   rowwise() %>% 
@@ -286,18 +286,18 @@ news_unnested %>%
   kable()
 ```
 
-| Wort       | Mon | Tue | Wed | Thu | Fri | Sat | Total Count |
-|:-----------|----:|----:|----:|----:|----:|----:|------------:|
-| corona     |  84 |  74 |  77 |  59 |  72 |  18 |         384 |
-| eu         |  53 |  59 |  42 |  48 |  47 |   7 |         256 |
-| lage       |  38 |  31 |  36 |  38 |  40 |  10 |         193 |
-| saarland   |  33 |  33 |  35 |  39 |  26 |  10 |         176 |
-| bundestag  |   1 |   8 |  28 |  36 |  50 |   0 |         123 |
-| interview  |  15 |  11 |   5 |   7 |  13 |  71 |         122 |
-| ukraine    |  21 |  24 |  18 |  16 |  25 |   6 |         110 |
-| neue       |  30 |  19 |  16 |  14 |  17 |  12 |         108 |
-| china      |  23 |  21 |  17 |  17 |  18 |   3 |          99 |
-| reaktionen |  23 |  16 |  21 |  21 |   8 |   8 |          97 |
+| Word                | Mon | Tue | Wed | Thu | Fri | Sat | Total Count |
+|:--------------------|----:|----:|----:|----:|----:|----:|------------:|
+| corona              |  84 |  74 |  77 |  59 |  72 |  18 |         384 |
+| US_keywords_summary |  31 |  48 |  51 |  43 |  48 |  38 |         259 |
+| eu                  |  53 |  59 |  42 |  48 |  47 |   7 |         256 |
+| lage                |  38 |  31 |  36 |  38 |  40 |  10 |         193 |
+| saarland            |  33 |  33 |  35 |  39 |  26 |  10 |         176 |
+| bundestag           |   1 |   8 |  28 |  36 |  50 |   0 |         123 |
+| interview           |  15 |  11 |   5 |   7 |  13 |  71 |         122 |
+| ukraine             |  21 |  24 |  18 |  16 |  25 |   6 |         110 |
+| neue                |  30 |  19 |  16 |  14 |  17 |  12 |         108 |
+| china               |  23 |  21 |  17 |  17 |  18 |   3 |          99 |
 
 Corona and the Ukraine dominate news during the week, indicating perhaps
 an avoidance of such pressing topics on weekends. Saturdays seem
