@@ -81,11 +81,11 @@ Let’s examine the time frame covered by the articles.
 ``` r
 # Articles by month
 news_distinct %>%
-  count(Monat = floor_date(Datum, "month"),
-        name = "Artikelanzahl") %>%
-  ggplot(aes(x = Monat, y = Artikelanzahl)) +
+  count(Month = floor_date(Datum, "month"),
+        name = "Number of Articles") %>%
+  ggplot(aes(x = Month, y = `Number of Articles`)) +
   geom_col() +
-  scale_x_date(date_breaks = "3 months") +
+  scale_x_date(date_breaks = "6 months") +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
 ```
 
@@ -114,9 +114,9 @@ am Mittag also appears on Saturdays. Sunday is a holiday.
 # Articles by day of week
 news_filtered %>%
   count(Format,
-        Wochentag = wday(Datum, locale = "German", label = TRUE),
-        name = "Anzahl") %>% 
-  ggplot(aes(x = Wochentag, y = Anzahl, fill = Format)) +
+        Weekday = wday(Datum, locale = "German", label = TRUE),
+        name = "Count") %>% 
+  ggplot(aes(x = Weekday, y = Count, fill = Format)) +
   geom_col()
 ```
 
@@ -194,50 +194,53 @@ Now, let’s plot the top keywords by number of appearance.
 ``` r
 # Keyword frecuency
 top_n_keywords <- news_unnested %>%
-  count(Wort, name = "Anzahl", sort = TRUE)
+  count(Wort, name = "Count", sort = TRUE) %>% 
+  rename(Word = Wort)
 
-top_n_keywords %>% head(30) %>% print(n = Inf)
+top_n_keywords %>% filter(Count >= 55) %>% print(n = Inf)
 ```
 
-    #> # A tibble: 30 × 2
-    #>    Wort        Anzahl
-    #>    <chr>        <int>
-    #>  1 corona         384
-    #>  2 eu             256
-    #>  3 lage           193
-    #>  4 saarland       176
-    #>  5 bundestag      123
-    #>  6 interview      122
-    #>  7 ukraine        110
-    #>  8 neue           108
-    #>  9 china           99
-    #> 10 reaktionen      97
-    #> 11 deutschland     96
-    #> 12 woche           87
-    #> 13 debatte         83
-    #> 14 kommentar       82
-    #> 15 mehr            80
-    #> 16 israel          75
-    #> 17 afghanistan     74
-    #> 18 frankreich      74
-    #> 19 jahre           73
-    #> 20 usa             73
-    #> 21 us              71
-    #> 22 wahl            71
-    #> 23 gipfel          68
-    #> 24 berlin          67
-    #> 25 cdu             65
-    #> 26 russland        63
-    #> 27 geht            62
-    #> 28 treffen         61
-    #> 29 afd             58
-    #> 30 aktuelle        58
+    #> # A tibble: 32 × 2
+    #>    Word        Count
+    #>    <chr>       <int>
+    #>  1 corona        384
+    #>  2 eu            256
+    #>  3 lage          193
+    #>  4 saarland      176
+    #>  5 bundestag     123
+    #>  6 interview     122
+    #>  7 ukraine       110
+    #>  8 neue          108
+    #>  9 china          99
+    #> 10 reaktionen     97
+    #> 11 deutschland    96
+    #> 12 woche          87
+    #> 13 debatte        83
+    #> 14 kommentar      82
+    #> 15 mehr           80
+    #> 16 israel         75
+    #> 17 afghanistan    74
+    #> 18 frankreich     74
+    #> 19 jahre          73
+    #> 20 usa            73
+    #> 21 us             71
+    #> 22 wahl           71
+    #> 23 gipfel         68
+    #> 24 berlin         67
+    #> 25 cdu            65
+    #> 26 russland       63
+    #> 27 geht           62
+    #> 28 treffen        61
+    #> 29 afd            58
+    #> 30 aktuelle       58
+    #> 31 trump          58
+    #> 32 biden          57
 
 The keyword frequency is visually represented by the following word
 cloud.
 
 ``` r
-wordcloud(top_n_keywords$Wort, top_n_keywords$Anzahl, max.words = 30, colors = brewer.pal(6, "Dark2"))
+wordcloud(top_n_keywords$Word, top_n_keywords$Count, min.freq = 55, colors = brewer.pal(6, "Dark2"))
 ```
 
 ![](analysis_files/figure-gfm/wordcloud-1.png)<!-- -->
@@ -250,40 +253,82 @@ yet before news about the EU.
 
 ``` r
 # Frecuency US related words
+usa_keywords <- c("biden", "trump", "usa", "us")
 news_unnested %>% 
-  mutate(Wort = ifelse(Wort %in% c("biden", "trump", "usa", "us"),
+  mutate(Word = ifelse(Wort %in% usa_keywords,
                        "US_keywords_summary", Wort)) %>% 
-  count(Wort, name = "Anzahl", sort = TRUE) %>% 
+  count(Word, name = "Count", sort = TRUE) %>% 
   head(3) %>% 
   kable()
 ```
 
-| Wort                | Anzahl |
-|:--------------------|-------:|
-| corona              |    384 |
-| US_keywords_summary |    259 |
-| eu                  |    256 |
+| Word                | Count |
+|:--------------------|------:|
+| corona              |   384 |
+| US_keywords_summary |   259 |
+| eu                  |   256 |
+
+It is also interesting to observe the distribution of those keywords
+within the week.
+
+``` r
+news_unnested %>% 
+  mutate(Word = ifelse(Wort %in% usa_keywords,
+                       "US_keywords_summary", Wort),
+         Weekday = wday(Datum, label = TRUE)) %>% 
+  count(Weekday, Wort, name = "Count", sort = TRUE) %>% 
+  arrange(Weekday) %>% 
+  pivot_wider(names_from = Weekday, values_from = Count, values_fill = 0) %>% 
+  rowwise() %>% 
+  mutate(`Total Count` = sum(c_across(Mon:Sat))) %>% 
+  arrange(desc(`Total Count`)) %>% 
+  head(10) %>% 
+  kable()
+```
+
+| Wort       | Mon | Tue | Wed | Thu | Fri | Sat | Total Count |
+|:-----------|----:|----:|----:|----:|----:|----:|------------:|
+| corona     |  84 |  74 |  77 |  59 |  72 |  18 |         384 |
+| eu         |  53 |  59 |  42 |  48 |  47 |   7 |         256 |
+| lage       |  38 |  31 |  36 |  38 |  40 |  10 |         193 |
+| saarland   |  33 |  33 |  35 |  39 |  26 |  10 |         176 |
+| bundestag  |   1 |   8 |  28 |  36 |  50 |   0 |         123 |
+| interview  |  15 |  11 |   5 |   7 |  13 |  71 |         122 |
+| ukraine    |  21 |  24 |  18 |  16 |  25 |   6 |         110 |
+| neue       |  30 |  19 |  16 |  14 |  17 |  12 |         108 |
+| china      |  23 |  21 |  17 |  17 |  18 |   3 |          99 |
+| reaktionen |  23 |  16 |  21 |  21 |   8 |   8 |          97 |
+
+Corona and the Ukraine dominate news during the week, indicating perhaps
+an avoidance of such pressing topics on weekends. Saturdays seem
+reserved for more background information, as implied by the prominence
+of the word “Interview”. US-related topics persist from Monday to
+Saturday, and I wonder why a similar pattern doesn’t seem to hold for
+other countries, such as China. Regional messages concerning the
+Bundestag (the German Parliament), Saarland or the EU take center stage
+during weekdays.
 
 ## Keywords over time
 
-Let’s visualize the changing patterns of keywords appearances over time.
+Let’s visualize the changing patterns of specific keyword appearances
+over time.
 
 ``` r
 # Select keywords
-keywords <- c("lockdown", "corona", "afghanistan", "kabul", "ukraine", "russland", "gaza", "israel", "china", "türkei", "italien", "selenskyj")
+keywords <- c("lockdown", "corona", "afghanistan", "kabul", "ukraine", "russland", "gaza", "israel", "china", "türkei", "eu", "selenskyj")
 
 # Selected keywords over time
 news_unnested %>% 
-  count(Wort, Monat = floor_date(Datum, "month"), name = "Anzahl") %>% 
+  count(Wort, Month = floor_date(Datum, "month"), name = "Count") %>% 
   filter(Wort %in% keywords) %>% 
   # If keyword does not appear in certain month, insert row with explicit 0
-  complete(Monat = seq(
+  complete(Month = seq(
     from = floor_date(min(news_unnested$Datum), "month"),
     to = max(news_unnested$Datum),
     by = "month"),
     Wort,
-    fill = list(Anzahl = 0)) %>% 
-  ggplot(aes(x = Monat, y = Anzahl, color = Wort)) +
+    fill = list(Count = 0)) %>% 
+  ggplot(aes(x = Month, y = Count, color = Wort)) +
   geom_line(size = 1) +
   # geom_line(aes(color = if_else(Monat %within% interval(as_date("2022-02-15"), as_date("2022-09-01")), NA, Wort)), size = 1) +
   geom_label(aes(label = "No data available", x = as_date("2022-06-15"), y = 0), size = 3, label.padding = unit(.15, "lines")) +
@@ -294,45 +339,5 @@ news_unnested %>%
 ```
 
 ![](analysis_files/figure-gfm/keywords-over-time-1.png)<!-- -->
-
-Additional to the temporal evolution, it’s also interesting to observe
-the distribution of these keywords within the week.
-
-``` r
-news_unnested %>% 
-  mutate(Wort = ifelse(Wort %in% c("biden", "trump", "usa", "us"),
-                       "US_keywords_summary", Wort),
-         Wochentag = wday(Datum, label = TRUE)) %>% 
-  count(Wochentag, Wort, name = "Anzahl", sort = TRUE) %>% 
-  arrange(Wochentag) %>% 
-  pivot_wider(names_from = Wochentag, values_from = Anzahl, values_fill = 0) %>% 
-  rowwise() %>% 
-  mutate(Anzahl_Gesamt = sum(c_across(Mon:Sat))) %>% 
-  arrange(desc(Anzahl_Gesamt)) %>% 
-  head(10) %>% 
-  kable()
-```
-
-| Wort                | Mon | Tue | Wed | Thu | Fri | Sat | Anzahl_Gesamt |
-|:--------------------|----:|----:|----:|----:|----:|----:|--------------:|
-| corona              |  84 |  74 |  77 |  59 |  72 |  18 |           384 |
-| US_keywords_summary |  31 |  48 |  51 |  43 |  48 |  38 |           259 |
-| eu                  |  53 |  59 |  42 |  48 |  47 |   7 |           256 |
-| lage                |  38 |  31 |  36 |  38 |  40 |  10 |           193 |
-| saarland            |  33 |  33 |  35 |  39 |  26 |  10 |           176 |
-| bundestag           |   1 |   8 |  28 |  36 |  50 |   0 |           123 |
-| interview           |  15 |  11 |   5 |   7 |  13 |  71 |           122 |
-| ukraine             |  21 |  24 |  18 |  16 |  25 |   6 |           110 |
-| neue                |  30 |  19 |  16 |  14 |  17 |  12 |           108 |
-| china               |  23 |  21 |  17 |  17 |  18 |   3 |            99 |
-
-Corona and the Ukraine dominate news during the week, indicating perhaps
-an avoidance of such pressing topics on weekends. Saturdays seem
-reserved for more background information, as implied by the prominence
-of the word “Interview”. US-related topics persist from Monday to
-Saturday, and I wonder why a similar pattern doesn’t seem to hold for
-other countries, such as China. Regional messages concerning the
-Bundestag (the German Parliament), Saarland or the EU take center stage
-during weekdays.
 
 *work in progress*
