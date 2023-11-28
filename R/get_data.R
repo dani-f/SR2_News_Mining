@@ -32,10 +32,10 @@ Links_Abend <- paste0("https://www.sr-mediathek.de/", Links_Abend)
 ## Länge and Datum Mittag
 Laenge_Datum_Mittag <- html_Bilanz_am_Mittag %>%
   html_nodes("div#picturearticle_collection_box div.teaser__text__footer__wrapper") %>% 
-  html_text() %>% 
-  str_extract_all("Länge.{10}|Datum.{12}")
+  html_text() %>%
+  str_extract_all("Länge: \\d{2}:\\d{2}:\\d{2}|Datum: \\d{2}\\.\\d{2}\\.\\d{4}")
 ### Clean Länge and Datum
-Laenge_Datum_Mittag <-
+Laenge_Datum_Mittag_clean <-
   matrix(unlist(Laenge_Datum_Mittag),
          nrow = length(Laenge_Datum_Mittag),
          byrow = TRUE) %>%
@@ -50,9 +50,9 @@ Laenge_Datum_Mittag <-
 Laenge_Datum_Abend <- html_Bilanz_am_Abend %>%
   html_nodes("div#picturearticle_collection_box div.teaser__text__footer__wrapper") %>% 
   html_text() %>% 
-  str_extract_all("Länge.{10}|Datum.{12}")
+  str_extract_all("Länge: (\\d{2}:\\d{2}:\\d{2})?|Datum: \\d{2}\\.\\d{2}\\.\\d{4}") # '?' means that the numerical part of Länge is optional. This was necessary as this numerical part was missing for 16/11/2023.
 ### Clean Länge and Datum
-Laenge_Datum_Abend <-
+Laenge_Datum_Abend_clean <-
   matrix(unlist(Laenge_Datum_Abend),
          nrow = length(Laenge_Datum_Abend),
          byrow = TRUE) %>%
@@ -121,13 +121,13 @@ Themen_Abend <- Themen_Abend %>%
 Bilanz_am_Mittag <- data.frame(Themen = Themen_Mittag,
                                Links = Links_Mittag,
                                Autor = Autor_Mittag,
-                               Laenge_Datum_Mittag,
+                               Laenge_Datum_Mittag_clean,
                                stringsAsFactors = FALSE)
 
 Bilanz_am_Abend <- data.frame(Themen = Themen_Abend,
                               Links = Links_Abend,
                               Autor = Autor_Abend,
-                              Laenge_Datum_Abend,
+                              Laenge_Datum_Abend_clean,
                               stringsAsFactors = FALSE)
 
 # Final data frame

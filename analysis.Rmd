@@ -141,7 +141,7 @@ The keyword frequency is visually represented by the following word cloud.
 wordcloud(top_n_keywords$Word, top_n_keywords$Count, min.freq = 55, colors = brewer.pal(6, "Dark2"))
 ```
 
-We see, Corona clearly dominated the news and also EU related topics were discussed. Since SR2 is a regional broadcasting station, we also observe the keyword Saarland. If we sum up all US related keywords that show up (Biden, Trump, USA, US) we notice it is another dominant topic, yet before news about the EU.
+We see, Corona clearly dominated the news and also EU related topics were discussed. Since SR2 is a regional broadcasting station, we also observe the keyword Saarland. If we sum up all US related keywords that show up (Biden, Trump, USA, US) we notice it is another dominant topic.
 
 ```{r keyword frecuency US related}
 # Frecuency US related words

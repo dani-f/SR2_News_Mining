@@ -37,7 +37,7 @@ news_raw <- map2(loaded_data, names(loaded_data), ~mutate(.x, source_file = .y))
 
 # Analysis
 
-The data collected from the webpage goes from 2017-08-31 to 2023-11-07.
+The data collected from the webpage goes from 2017-08-31 to 2023-11-28.
 
 If we have a closer look on the URLs, we can see that every article has
 an identification number associated which comes after the `id=`
@@ -94,7 +94,7 @@ news_distinct %>%
 Our data shows two time periods that are uncovered. The first is before
 August 2020. Unfortunately, SR2 seems to have deleted their data or they
 simply did not upload their editions consequently before that date.
-Therefore, to not bias our analysis, the 50 articles from before August
+Therefore, to not bias our analysis, the 60 articles from before August
 2020 are deleted (listwise deletion, since these are just a few cases).
 Moreover, we identify a significant gap in information between February
 and October 2022. You see, behind this code there is a human and humans
@@ -131,45 +131,46 @@ how many different spellings appear here.
 news_filtered %>% distinct(Autor) %>% arrange(Autor) %>% print(n = Inf)
 ```
 
-    #> # A tibble: 36 × 1
+    #> # A tibble: 37 × 1
     #>    Autor                              
     #>    <chr>                              
     #>  1 Böffel, Janek                      
     #>  2 Florian Mayer                      
-    #>  3 Folrian Mayer                      
-    #>  4 Frank Hofmann                      
-    #>  5 Gallmeyer, Kerstin                 
-    #>  6 Isabel Tentrup                     
-    #>  7 Isabell Tentrupp                   
-    #>  8 Isabelle Tentrup                   
-    #>  9 Isabelle Tentrupp                  
-    #> 10 Janek Böffel                       
-    #> 11 Jochem Marmit                      
-    #> 12 Jochen Marmit                      
-    #> 13 Karin Mayer                        
-    #> 14 Kathrin Aue                        
-    #> 15 Katrin Aue                         
-    #> 16 Katrin Aue, Janek Böffel           
-    #> 17 Katrin AueFrankreich streikt weiter
-    #> 18 Kerstin Gallmeyer                  
-    #> 19 Lisa Krauser                       
-    #> 20 Mayer, Florian                     
-    #> 21 Michael Thieser                    
-    #> 22 Peter Weitzmann                    
-    #> 23 SR 2 KulturRadio                   
-    #> 24 SR 2 Kulturradio                   
-    #> 25 Sarah Sassou                       
-    #> 26 Staphan Deppen                     
-    #> 27 Stefan Deppen                      
-    #> 28 Stephan Deppen                     
-    #> 29 Stephan Deppenh                    
-    #> 30 Thomas SHihabi                     
-    #> 31 Thomas Shihabi                     
-    #> 32 Thomas Shihabi et al.              
-    #> 33 Yvonne Scheinhege                  
-    #> 34 Yvonne Schleinhege                 
-    #> 35 Yvonne Schleinhege-Böffel          
-    #> 36 Îsabelle Tentrup
+    #>  3 Florian mayer                      
+    #>  4 Folrian Mayer                      
+    #>  5 Frank Hofmann                      
+    #>  6 Gallmeyer, Kerstin                 
+    #>  7 Isabel Tentrup                     
+    #>  8 Isabell Tentrupp                   
+    #>  9 Isabelle Tentrup                   
+    #> 10 Isabelle Tentrupp                  
+    #> 11 Janek Böffel                       
+    #> 12 Jochem Marmit                      
+    #> 13 Jochen Marmit                      
+    #> 14 Karin Mayer                        
+    #> 15 Kathrin Aue                        
+    #> 16 Katrin Aue                         
+    #> 17 Katrin Aue, Janek Böffel           
+    #> 18 Katrin AueFrankreich streikt weiter
+    #> 19 Kerstin Gallmeyer                  
+    #> 20 Lisa Krauser                       
+    #> 21 Mayer, Florian                     
+    #> 22 Michael Thieser                    
+    #> 23 Peter Weitzmann                    
+    #> 24 SR 2 KulturRadio                   
+    #> 25 SR 2 Kulturradio                   
+    #> 26 Sarah Sassou                       
+    #> 27 Staphan Deppen                     
+    #> 28 Stefan Deppen                      
+    #> 29 Stephan Deppen                     
+    #> 30 Stephan Deppenh                    
+    #> 31 Thomas SHihabi                     
+    #> 32 Thomas Shihabi                     
+    #> 33 Thomas Shihabi et al.              
+    #> 34 Yvonne Scheinhege                  
+    #> 35 Yvonne Schleinhege                 
+    #> 36 Yvonne Schleinhege-Böffel          
+    #> 37 Îsabelle Tentrup
 
 Let’s head over to analyse the content and check which news appear
 within the daily news blocks.
@@ -200,41 +201,42 @@ top_n_keywords <- news_unnested %>%
 top_n_keywords %>% filter(Count >= 55) %>% print(n = Inf)
 ```
 
-    #> # A tibble: 32 × 2
+    #> # A tibble: 33 × 2
     #>    Word        Count
     #>    <chr>       <int>
     #>  1 corona        384
-    #>  2 eu            256
-    #>  3 lage          193
-    #>  4 saarland      176
-    #>  5 bundestag     123
-    #>  6 interview     122
-    #>  7 ukraine       110
-    #>  8 neue          108
-    #>  9 china          99
-    #> 10 reaktionen     97
-    #> 11 deutschland    96
-    #> 12 woche          87
-    #> 13 debatte        83
-    #> 14 kommentar      82
-    #> 15 mehr           80
-    #> 16 israel         75
-    #> 17 afghanistan    74
-    #> 18 frankreich     74
-    #> 19 jahre          73
+    #>  2 eu            263
+    #>  3 lage          206
+    #>  4 saarland      179
+    #>  5 interview     126
+    #>  6 bundestag     125
+    #>  7 neue          111
+    #>  8 ukraine       111
+    #>  9 deutschland   100
+    #> 10 china          99
+    #> 11 reaktionen     98
+    #> 12 woche          89
+    #> 13 kommentar      86
+    #> 14 debatte        84
+    #> 15 israel         84
+    #> 16 mehr           82
+    #> 17 jahre          77
+    #> 18 frankreich     76
+    #> 19 afghanistan    74
     #> 20 usa            73
     #> 21 us             71
     #> 22 wahl           71
-    #> 23 gipfel         68
-    #> 24 berlin         67
-    #> 25 cdu            65
-    #> 26 russland       63
-    #> 27 geht           62
-    #> 28 treffen        61
-    #> 29 afd            58
-    #> 30 aktuelle       58
-    #> 31 trump          58
-    #> 32 biden          57
+    #> 23 berlin         69
+    #> 24 gipfel         69
+    #> 25 cdu            67
+    #> 26 russland       64
+    #> 27 geht           63
+    #> 28 treffen        63
+    #> 29 aktuelle       61
+    #> 30 afd            58
+    #> 31 biden          58
+    #> 32 trump          58
+    #> 33 urteil         55
 
 The keyword frequency is visually represented by the following word
 cloud.
@@ -248,8 +250,7 @@ wordcloud(top_n_keywords$Word, top_n_keywords$Count, min.freq = 55, colors = bre
 We see, Corona clearly dominated the news and also EU related topics
 were discussed. Since SR2 is a regional broadcasting station, we also
 observe the keyword Saarland. If we sum up all US related keywords that
-show up (Biden, Trump, USA, US) we notice it is another dominant topic,
-yet before news about the EU.
+show up (Biden, Trump, USA, US) we notice it is another dominant topic.
 
 ``` r
 # Frecuency US related words
@@ -265,8 +266,8 @@ news_unnested %>%
 | Word                | Count |
 |:--------------------|------:|
 | corona              |   384 |
-| US_keywords_summary |   259 |
-| eu                  |   256 |
+| eu                  |   263 |
+| US_keywords_summary |   260 |
 
 It is also interesting to observe the distribution of those keywords
 within the week.
@@ -289,15 +290,15 @@ news_unnested %>%
 | Word                | Mon | Tue | Wed | Thu | Fri | Sat | Total Count |
 |:--------------------|----:|----:|----:|----:|----:|----:|------------:|
 | corona              |  84 |  74 |  77 |  59 |  72 |  18 |         384 |
-| US_keywords_summary |  31 |  48 |  51 |  43 |  48 |  38 |         259 |
-| eu                  |  53 |  59 |  42 |  48 |  47 |   7 |         256 |
-| lage                |  38 |  31 |  36 |  38 |  40 |  10 |         193 |
-| saarland            |  33 |  33 |  35 |  39 |  26 |  10 |         176 |
-| bundestag           |   1 |   8 |  28 |  36 |  50 |   0 |         123 |
-| interview           |  15 |  11 |   5 |   7 |  13 |  71 |         122 |
-| ukraine             |  21 |  24 |  18 |  16 |  25 |   6 |         110 |
-| neue                |  30 |  19 |  16 |  14 |  17 |  12 |         108 |
-| china               |  23 |  21 |  17 |  17 |  18 |   3 |          99 |
+| eu                  |  53 |  60 |  42 |  54 |  47 |   7 |         263 |
+| US_keywords_summary |  31 |  48 |  51 |  44 |  48 |  38 |         260 |
+| lage                |  40 |  35 |  40 |  40 |  40 |  11 |         206 |
+| saarland            |  33 |  33 |  37 |  40 |  26 |  10 |         179 |
+| interview           |  15 |  12 |   5 |   8 |  13 |  73 |         126 |
+| bundestag           |   1 |   8 |  29 |  37 |  50 |   0 |         125 |
+| neue                |  30 |  20 |  16 |  15 |  18 |  12 |         111 |
+| ukraine             |  21 |  25 |  18 |  16 |  25 |   6 |         111 |
+| deutschland         |  10 |  22 |  21 |  22 |  21 |   4 |         100 |
 
 Corona and the Ukraine dominate news during the week, indicating perhaps
 an avoidance of such pressing topics on weekends. Saturdays seem
