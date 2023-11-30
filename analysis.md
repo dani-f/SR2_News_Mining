@@ -37,7 +37,7 @@ news_raw <- map2(loaded_data, names(loaded_data), ~mutate(.x, source_file = .y))
 
 # Analysis
 
-The data collected from the webpage goes from 2017-08-31 to 2023-11-28.
+The data collected from the webpage goes from 2017-08-31 to 2023-11-30.
 
 If we have a closer look on the URLs, we can see that every article has
 an identification number associated which comes after the `id=`
@@ -94,7 +94,7 @@ news_distinct %>%
 Our data shows two time periods that are uncovered. The first is before
 August 2020. Unfortunately, SR2 seems to have deleted their data or they
 simply did not upload their editions consequently before that date.
-Therefore, to not bias our analysis, the 60 articles from before August
+Therefore, to not bias our analysis, the 70 articles from before August
 2020 are deleted (listwise deletion, since these are just a few cases).
 Moreover, we identify a significant gap in information between February
 and October 2022. You see, behind this code there is a human and humans
@@ -206,13 +206,13 @@ top_n_keywords %>% filter(Count >= 55) %>% print(n = Inf)
     #>    <chr>       <int>
     #>  1 corona        384
     #>  2 eu            263
-    #>  3 lage          206
+    #>  3 lage          207
     #>  4 saarland      179
-    #>  5 interview     126
-    #>  6 bundestag     125
-    #>  7 neue          111
-    #>  8 ukraine       111
-    #>  9 deutschland   100
+    #>  5 bundestag     126
+    #>  6 interview     126
+    #>  7 ukraine       112
+    #>  8 neue          111
+    #>  9 deutschland   101
     #> 10 china          99
     #> 11 reaktionen     98
     #> 12 woche          89
@@ -229,14 +229,14 @@ top_n_keywords %>% filter(Count >= 55) %>% print(n = Inf)
     #> 23 berlin         69
     #> 24 gipfel         69
     #> 25 cdu            67
-    #> 26 russland       64
-    #> 27 geht           63
-    #> 28 treffen        63
+    #> 26 russland       65
+    #> 27 treffen        64
+    #> 28 geht           63
     #> 29 aktuelle       61
     #> 30 afd            58
     #> 31 biden          58
     #> 32 trump          58
-    #> 33 urteil         55
+    #> 33 urteil         57
 
 The keyword frequency is visually represented by the following word
 cloud.
@@ -292,13 +292,13 @@ news_unnested %>%
 | corona              |  84 |  74 |  77 |  59 |  72 |  18 |         384 |
 | eu                  |  53 |  60 |  42 |  54 |  47 |   7 |         263 |
 | US_keywords_summary |  31 |  48 |  51 |  44 |  48 |  38 |         260 |
-| lage                |  40 |  35 |  40 |  40 |  40 |  11 |         206 |
+| lage                |  40 |  35 |  41 |  40 |  40 |  11 |         207 |
 | saarland            |  33 |  33 |  37 |  40 |  26 |  10 |         179 |
 | interview           |  15 |  12 |   5 |   8 |  13 |  73 |         126 |
-| bundestag           |   1 |   8 |  29 |  37 |  50 |   0 |         125 |
+| bundestag           |   1 |   8 |  29 |  38 |  50 |   0 |         126 |
+| ukraine             |  21 |  25 |  19 |  16 |  25 |   6 |         112 |
 | neue                |  30 |  20 |  16 |  15 |  18 |  12 |         111 |
-| ukraine             |  21 |  25 |  18 |  16 |  25 |   6 |         111 |
-| deutschland         |  10 |  22 |  21 |  22 |  21 |   4 |         100 |
+| deutschland         |  10 |  22 |  21 |  23 |  21 |   4 |         101 |
 
 Corona and the Ukraine dominate news during the week, indicating perhaps
 an avoidance of such pressing topics on weekends. Saturdays seem
