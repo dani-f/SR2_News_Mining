@@ -37,7 +37,7 @@ news_raw <- map2(loaded_data, names(loaded_data), ~mutate(.x, source_file = .y))
 
 # Analysis
 
-The data collected from the webpage goes from 2017-08-31 to 2023-11-30.
+The data collected from the webpage goes from 2017-08-31 to 2023-12-01.
 
 If we have a closer look on the URLs, we can see that every article has
 an identification number associated which comes after the `id=`
@@ -94,7 +94,7 @@ news_distinct %>%
 Our data shows two time periods that are uncovered. The first is before
 August 2020. Unfortunately, SR2 seems to have deleted their data or they
 simply did not upload their editions consequently before that date.
-Therefore, to not bias our analysis, the 70 articles from before August
+Therefore, to not bias our analysis, the 80 articles from before August
 2020 are deleted (listwise deletion, since these are just a few cases).
 Moreover, we identify a significant gap in information between February
 and October 2022. You see, behind this code there is a human and humans
@@ -123,8 +123,8 @@ news_filtered %>%
 ![](analysis_files/figure-gfm/articles%20by%20day%20of%20week-1.png)<!-- -->
 
 When focusing on the narrators, it is interesting to note how the SR
-webpage content managers do not know the names of their colleagues. See
-how many different spellings appear here.
+webpage content managers do not know the names of their colleagues. Or
+what is the reasons of that many different spellings of the same name?
 
 ``` r
 # Distinct authors/narrators
@@ -208,10 +208,10 @@ top_n_keywords %>% filter(Count >= 55) %>% print(n = Inf)
     #>  2 eu            263
     #>  3 lage          207
     #>  4 saarland      179
-    #>  5 bundestag     126
+    #>  5 bundestag     127
     #>  6 interview     126
-    #>  7 ukraine       112
-    #>  8 neue          111
+    #>  7 neue          112
+    #>  8 ukraine       112
     #>  9 deutschland   101
     #> 10 china          99
     #> 11 reaktionen     98
@@ -224,7 +224,7 @@ top_n_keywords %>% filter(Count >= 55) %>% print(n = Inf)
     #> 18 frankreich     76
     #> 19 afghanistan    74
     #> 20 usa            73
-    #> 21 us             71
+    #> 21 us             72
     #> 22 wahl           71
     #> 23 berlin         69
     #> 24 gipfel         69
@@ -248,9 +248,10 @@ wordcloud(top_n_keywords$Word, top_n_keywords$Count, min.freq = 55, colors = bre
 ![](analysis_files/figure-gfm/wordcloud-1.png)<!-- -->
 
 We see, Corona clearly dominated the news and also EU related topics
-were discussed. Since SR2 is a regional broadcasting station, we also
-observe the keyword Saarland. If we sum up all US related keywords that
-show up (Biden, Trump, USA, US) we notice it is another dominant topic.
+were discussed. Since SR2 is a regional broadcasting station, it’s no
+surprise that we also observe the keyword Saarland. If we sum up all US
+related keywords that show up (Biden, Trump, USA, US) we notice it is
+another very dominant topic.
 
 ``` r
 # Frecuency US related words
@@ -267,9 +268,9 @@ news_unnested %>%
 |:--------------------|------:|
 | corona              |   384 |
 | eu                  |   263 |
-| US_keywords_summary |   260 |
+| US_keywords_summary |   261 |
 
-It is also interesting to observe the distribution of those keywords
+It is also interesting to observe the distribution of these keywords
 within the week.
 
 ``` r
@@ -291,20 +292,20 @@ news_unnested %>%
 |:--------------------|----:|----:|----:|----:|----:|----:|------------:|
 | corona              |  84 |  74 |  77 |  59 |  72 |  18 |         384 |
 | eu                  |  53 |  60 |  42 |  54 |  47 |   7 |         263 |
-| US_keywords_summary |  31 |  48 |  51 |  44 |  48 |  38 |         260 |
+| US_keywords_summary |  31 |  48 |  51 |  44 |  49 |  38 |         261 |
 | lage                |  40 |  35 |  41 |  40 |  40 |  11 |         207 |
 | saarland            |  33 |  33 |  37 |  40 |  26 |  10 |         179 |
+| bundestag           |   1 |   8 |  29 |  38 |  51 |   0 |         127 |
 | interview           |  15 |  12 |   5 |   8 |  13 |  73 |         126 |
-| bundestag           |   1 |   8 |  29 |  38 |  50 |   0 |         126 |
+| neue                |  30 |  20 |  16 |  15 |  19 |  12 |         112 |
 | ukraine             |  21 |  25 |  19 |  16 |  25 |   6 |         112 |
-| neue                |  30 |  20 |  16 |  15 |  18 |  12 |         111 |
 | deutschland         |  10 |  22 |  21 |  23 |  21 |   4 |         101 |
 
 Corona and the Ukraine dominate news during the week, indicating perhaps
 an avoidance of such pressing topics on weekends. Saturdays seem
 reserved for more background information, as implied by the prominence
-of the word “Interview”. US-related topics persist from Monday to
-Saturday, and I wonder why a similar pattern doesn’t seem to hold for
+of the word “interview”. US-related topics persist from Monday to
+Saturday, and I wonder why a similar pattern does not seem to hold for
 other countries, such as China. Regional messages concerning the
 Bundestag (the German Parliament), Saarland or the EU take center stage
 during weekdays.
@@ -330,15 +331,25 @@ news_unnested %>%
     Wort,
     fill = list(Count = 0)) %>% 
   ggplot(aes(x = Month, y = Count, color = Wort)) +
-  geom_line(size = 1) +
-  # geom_line(aes(color = if_else(Monat %within% interval(as_date("2022-02-15"), as_date("2022-09-01")), NA, Wort)), size = 1) +
+  geom_line(linewidth = 1) +
   geom_label(aes(label = "No data available", x = as_date("2022-06-15"), y = 0), size = 3, label.padding = unit(.15, "lines")) +
   facet_wrap(~ Wort, ncol = 3, scales = "free_y") +
-  scale_x_date(breaks = "6 month") +
+  scale_x_date(breaks = "6 month", limits = c(NA_Date_, floor_date(today() - months(1), "month"))) +
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 75, vjust = 0.58))
 ```
 
 ![](analysis_files/figure-gfm/keywords-over-time-1.png)<!-- -->
 
-*work in progress*
+It’s interesting to see how news themes develop in the course of time.
+Gaza and Israel have a peak since October 2023, but note that Israel
+appears twice as often as Gaza. Accordingly, the Ukraine is every day of
+fewer importance and maybe soon to disappear, although the war is going
+on? Corona and lockdown are not present anymore, however at the end of
+each year it feels like Corona celebrates its comeback in the news.
+
+*NB: This project was a work in progress from September 2020 until
+December 2023. Moving forward, I won’t be sending regular updates.
+However, I am considering to use this experience to extend it to another
+media website, driving it towards a more professional level and maybe a
+broader audience. More to come…*

@@ -101,7 +101,7 @@ news_filtered %>%
   geom_col()
 ```
 
-When focusing on the narrators, it is interesting to note how the SR webpage content managers do not know the names of their colleagues. See how many different spellings appear here.
+When focusing on the narrators, it is interesting to note how the SR webpage content managers do not know the names of their colleagues. Or what is the reasons of that many different spellings of the same name?
 
 ```{r distinct authors, out.height = "50%"}
 # Distinct authors/narrators
@@ -141,7 +141,7 @@ The keyword frequency is visually represented by the following word cloud.
 wordcloud(top_n_keywords$Word, top_n_keywords$Count, min.freq = 55, colors = brewer.pal(6, "Dark2"))
 ```
 
-We see, Corona clearly dominated the news and also EU related topics were discussed. Since SR2 is a regional broadcasting station, we also observe the keyword Saarland. If we sum up all US related keywords that show up (Biden, Trump, USA, US) we notice it is another dominant topic.
+We see, Corona clearly dominated the news and also EU related topics were discussed. Since SR2 is a regional broadcasting station, it's no surprise that we also observe the keyword Saarland. If we sum up all US related keywords that show up (Biden, Trump, USA, US) we notice it is another very dominant topic.
 
 ```{r keyword frecuency US related}
 # Frecuency US related words
@@ -154,7 +154,7 @@ news_unnested %>%
   kable()
 ```
 
-It is also interesting to observe the distribution of those keywords within the week.
+It is also interesting to observe the distribution of these keywords within the week.
 
 ```{r keywords by weekday}
 news_unnested %>% 
@@ -171,7 +171,7 @@ news_unnested %>%
   kable()
 ```
 
-Corona and the Ukraine dominate news during the week, indicating perhaps an avoidance of such pressing topics on weekends. Saturdays seem reserved for more background information, as implied by the prominence of the word "Interview". US-related topics persist from Monday to Saturday, and I wonder why a similar pattern doesn't seem to hold for other countries, such as China. Regional messages concerning the Bundestag (the German Parliament), Saarland or the EU take center stage during weekdays. 
+Corona and the Ukraine dominate news during the week, indicating perhaps an avoidance of such pressing topics on weekends. Saturdays seem reserved for more background information, as implied by the prominence of the word "interview". US-related topics persist from Monday to Saturday, and I wonder why a similar pattern does not seem to hold for other countries, such as China. Regional messages concerning the Bundestag (the German Parliament), Saarland or the EU take center stage during weekdays. 
 
 ## Keywords over time
 
@@ -193,14 +193,14 @@ news_unnested %>%
     Wort,
     fill = list(Count = 0)) %>% 
   ggplot(aes(x = Month, y = Count, color = Wort)) +
-  geom_line(size = 1) +
-  # geom_line(aes(color = if_else(Monat %within% interval(as_date("2022-02-15"), as_date("2022-09-01")), NA, Wort)), size = 1) +
+  geom_line(linewidth = 1) +
   geom_label(aes(label = "No data available", x = as_date("2022-06-15"), y = 0), size = 3, label.padding = unit(.15, "lines")) +
   facet_wrap(~ Wort, ncol = 3, scales = "free_y") +
-  scale_x_date(breaks = "6 month") +
+  scale_x_date(breaks = "6 month", limits = c(NA_Date_, floor_date(today() - months(1), "month"))) +
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 75, vjust = 0.58))
 ```
 
+It's interesting to see how news themes develop in the course of time. Gaza and Israel have a peak since October 2023, but note that Israel appears twice as often as Gaza. Accordingly, the Ukraine is every day of fewer importance and maybe soon to disappear, although the war is going on? Corona and lockdown are not present anymore, however at the end of each year it feels like Corona celebrates its comeback in the news.
 
-*work in progress*
+*NB: This project was a work in progress from September 2020 until December 2023. Moving forward, I won't be sending regular updates. However, I am considering to use this experience to extend it to another media website, driving it towards a more professional level and maybe a broader audience. More to come...*
