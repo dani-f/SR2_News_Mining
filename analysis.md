@@ -37,6 +37,8 @@ news_raw <- map2(loaded_data, names(loaded_data), ~mutate(.x, source_file = .y))
 
 # Analysis
 
+## Overview
+
 The data collected from the webpage goes from 2017-08-31 to 2023-12-01.
 
 If we have a closer look on the URLs, we can see that every article has
@@ -121,6 +123,8 @@ news_filtered %>%
 ```
 
 ![](analysis_files/figure-gfm/articles%20by%20day%20of%20week-1.png)<!-- -->
+
+## Authors
 
 When focusing on the narrators, it is interesting to note how the SR
 webpage content managers do not know the names of their colleagues. Or
