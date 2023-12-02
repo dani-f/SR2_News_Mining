@@ -19,8 +19,8 @@ This project can be a tool for anyone who wants to start analyzing news formats.
 
 ## Software
 - R (version 4.2.2)
-- RStudio (version 1.1.423)
-- Running under Windows >= 8 (x64)
+- RStudio (version 2023.09.1)
+- Running under Windows 10 (x64)
 - Packages: wordcloud_2.6, RColorBrewer_1.1-3, lubridate_1.9.2, forcats_1.0.0, stringr_1.5.0, dplyr_1.1.1, purrr_1.0.1, readr_2.1.4, tidyr_1.3.0, tibble_3.2.1, ggplot2_3.4.2, tidyverse_2.0.0, tidytext_0.3.3, knitr_1.45, stopwords_2.3, httr_1.4.5, xml2_1.3.3, rvest_1.0.3
 
 No need to say that most web scraping projects of these times have been inspired by David Kriesel's amazing Spiegel Mining project (www.dkriesel.com/spiegelmining).

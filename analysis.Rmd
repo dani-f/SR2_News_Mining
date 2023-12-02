@@ -47,6 +47,7 @@ news_raw <- map2(loaded_data, names(loaded_data), ~mutate(.x, source_file = .y))
 
 # Analysis
 
+## Overview
 The data collected from the webpage goes from `r min(news$Datum)` to `r max(news$Datum)`.
 
 If we have a closer look on the URLs, we can see that every article has an identification number associated which comes after the `id=` parameter at a similar position for each URL.
@@ -101,6 +102,7 @@ news_filtered %>%
   geom_col()
 ```
 
+## Authors
 When focusing on the narrators, it is interesting to note how the SR webpage content managers do not know the names of their colleagues. Or what is the reasons of that many different spellings of the same name?
 
 ```{r distinct authors, out.height = "50%"}
@@ -110,8 +112,7 @@ news_filtered %>% distinct(Autor) %>% arrange(Autor) %>% print(n = Inf)
 
 Let's head over to analyse the content and check which news appear within the daily news blocks.
 
-## Keywords by number of appearence
-
+## Keywords by number of appearence   
 First, we load a dictionary with German stop-words so we can delete unnecessary words from the text corpus.
 
 ```{r load dictionary}
@@ -174,7 +175,6 @@ news_unnested %>%
 Corona and the Ukraine dominate news during the week, indicating perhaps an avoidance of such pressing topics on weekends. Saturdays seem reserved for more background information, as implied by the prominence of the word "interview". US-related topics persist from Monday to Saturday, and I wonder why a similar pattern does not seem to hold for other countries, such as China. Regional messages concerning the Bundestag (the German Parliament), Saarland or the EU take center stage during weekdays. 
 
 ## Keywords over time
-
 Let's visualize the changing patterns of specific keyword appearances over time.
 
 ```{r keywords-over-time, fig.width = 20, fig.height = 12.5}
