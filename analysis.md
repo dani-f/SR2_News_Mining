@@ -288,7 +288,7 @@ news_unnested %>%
   rowwise() %>% 
   mutate(`Total Count` = sum(c_across(Mon:Sat))) %>% 
   arrange(desc(`Total Count`)) %>% 
-  head(10) %>% 
+  head(11) %>% 
   kable()
 ```
 
@@ -304,6 +304,7 @@ news_unnested %>%
 | neue                |  30 |  20 |  16 |  15 |  19 |  12 |         112 |
 | ukraine             |  21 |  25 |  19 |  16 |  25 |   6 |         112 |
 | deutschland         |  10 |  22 |  21 |  23 |  21 |   4 |         101 |
+| china               |  23 |  21 |  17 |  17 |  18 |   3 |          99 |
 
 Corona and the Ukraine dominate news during the week, indicating perhaps
 an avoidance of such pressing topics on weekends. Saturdays seem

@@ -168,7 +168,7 @@ news_unnested %>%
   rowwise() %>% 
   mutate(`Total Count` = sum(c_across(Mon:Sat))) %>% 
   arrange(desc(`Total Count`)) %>% 
-  head(10) %>% 
+  head(11) %>% 
   kable()
 ```
 
